@@ -52,6 +52,21 @@ body {
   font-size: 18px;
   color: var(--text-sub);
 }
+.btn-close {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.btn-close:hover {
+  background-color: #1b5e20;
+}
 
 /* =====================
    GALLERY
@@ -102,6 +117,7 @@ body {
 .why-recycle {
   background: var(--paper);
   padding: 90px 20px;
+  font-size: 50px;
 }
 
 .why-recycle h2 {
@@ -134,12 +150,12 @@ body {
 
 .reason h4 {
   margin: 14px 0 8px;
-  font-size: 18px;
+  font-size: 30px;
   color: var(--green-main);
 }
 
 .reason p {
-  font-size: 14px;
+  font-size: 18px;
   color: var(--text-sub);
 }
 
