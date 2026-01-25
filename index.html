@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>7A4 Group 1 - Shelf Recycle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero fade-in">
+  <h1>7A4N1 Group 1 - Shelf Recycle</h1>
+  <p>Eco-Friendly Products Made From Repurposed Materials</p>
+</header>
+
+<section class="gallery">
+  <div class="card slide-up" onclick="openModal('modal1')">
+    <img src="images/shelf1.jpg" alt="Recycled Shelf">
+    <h3>Recycled Cardboard Shelf</h3>
+    <p>Made from repurposed cardboard</p>
+  </div>
+
+  <div class="card slide-up" onclick="openModal('modal2')">
+    <img src="images/shelf2.jpg" alt="Recycled Shelf">
+    <h3>Wooden Recycle Shelf</h3>
+    <p>Made from reused materials</p>
+  </div>
+</section>
+
+
+<!-- WHY RECYCLE -->
+<section class="why-recycle fade-in">
+  <h2>Why Recycle Matters</h2>
+  <div class="reasons">
+    <div class="reason">
+      ♻️
+      <h4>Reduce Waste</h4>
+      <p>Recycling helps reduce landfill waste and pollution.</p>
+    </div>
+    <div class="reason">
+      🌍
+      <h4>Protect Nature</h4>
+      <p>Using repurposed materials saves natural resources.</p>
+    </div>
+    <div class="reason">
+      💡
+      <h4>Creative Living</h4>
+      <p>Recycled products encourage creativity and sustainability.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MODAL -->
+<div id="modal1" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal1')">&times;</span>
+
+    <h2>Recycled Cardboard Shelf</h2>
+    <p>
+      This shelf is made from reused cardboard, helping reduce waste
+      and protect the environment.
+    </p>
+
+    <h3>Materials Used</h3>
+    <ul>
+   <li>Used cardboard boxes</li>
+<li>Transparent adhesive tape</li>
+<li>Scissors</li>
+    </ul>
+<div class="container-img">
+    <img class="img-detail" src="images/material1-1.jpg" alt="">
+    <img class="img-detail" src="images/material1-2.jpg" alt="">
+    <img class="img-detail" src="images/material1-3.jpg" alt="">
+</div>
+</div>
+</div>
+
+<div id="modal2" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('modal2')">&times;</span>
+
+    <h2>Wooden Recycle Shelf</h2>
+    <p>
+      This shelf is crafted from reused wood, giving old materials
+      a new and useful life.
+    </p>
+
+    <h3>Materials Used</h3>
+ <ul>
+  <li>Recycled wooden sticks (ice cream sticks)</li>
+  <li>Craft knife (box cutter)</li>
+  <li>Hot glue sticks and a hot glue gun</li>
+</ul>
+
+ <div class="container-img">
+    <img class="img-detail" src="images/material2-1.jpg" alt="">
+    <img class="img-detail" src="images/material2-2.jpg" alt="">
+    <img class="img-detail" src="images/material2-3.jpg" alt="">
+</div>
+  </div>
+</div>
+
+
+<footer>
+  <div class="footer-content">
+    <p><strong>Shelf Recycle</strong> ♻️</p>
+    <p>Think Green · Live Clean</p>
+
+    <p>
+      Project by <strong>Class 7A4N1</strong> <br>
+      <strong>Nghĩa Tân Secondary School</strong>
+    </p>
+
+    <p class="footer-year">
+      © 2026 · Recycle Today, Save Tomorrow
+    </p>
+  </div>
+</footer>
+
+<script>
+  function openModal(id) {
+    document.getElementById(id).style.display = "flex";
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = "none";
+  }
+
+  window.addEventListener("click", function (e) {
+    if (e.target.classList.contains("modal")) {
+      e.target.style.display = "none";
+    }
+  });
+</script>
+
+
+</body>
+</html>

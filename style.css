@@ -1,0 +1,336 @@
+/* =====================
+   RESET & VARIABLES
+===================== */
+:root {
+  --green-dark: #2f5d46;
+  --green-main: #3b6b4c;
+  --green-soft: #e3efe8;
+  --beige-bg: #f5f2ed;
+  --paper: #fcfbf8;
+  --text-main: #2f3e34;
+  --text-sub: #6b7d6f;
+  --shadow-soft: 0 10px 25px rgba(0,0,0,0.08);
+  --shadow-hover: 0 25px 45px rgba(0,0,0,0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", "Arial", sans-serif;
+  background: var(--beige-bg);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+/* =====================
+   HERO
+===================== */
+.hero {
+  background: linear-gradient(
+    180deg,
+    var(--green-soft),
+    var(--beige-bg)
+  );
+  text-align: center;
+  padding: 90px 20px 70px;
+}
+
+.hero h1 {
+  font-size: clamp(36px, 6vw, 56px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--green-dark);
+}
+
+.hero p {
+  max-width: 520px;
+  margin: 16px auto 0;
+  font-size: 18px;
+  color: var(--text-sub);
+}
+
+/* =====================
+   GALLERY
+===================== */
+.gallery {
+  max-width: 1100px;
+  margin: auto;
+  padding: 80px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 40px;
+}
+
+.card {
+  background: var(--paper);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.45s ease, box-shadow 0.45s ease;
+}
+
+.card:hover {
+  transform: translateY(-12px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.card h3 {
+  padding: 22px 22px 8px;
+  font-size: 20px;
+  color: var(--green-main);
+}
+
+.card p {
+  padding: 0 22px 26px;
+  font-size: 14px;
+  color: var(--text-sub);
+}
+
+/* =====================
+   WHY RECYCLE
+===================== */
+.why-recycle {
+  background: var(--paper);
+  padding: 90px 20px;
+}
+
+.why-recycle h2 {
+  text-align: center;
+  font-size: 34px;
+  margin-bottom: 50px;
+  color: var(--green-dark);
+}
+
+.reasons {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+}
+
+.reason {
+  background: var(--beige-bg);
+  padding: 35px 28px;
+  border-radius: 20px;
+  text-align: center;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.reason:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-soft);
+}
+
+.reason h4 {
+  margin: 14px 0 8px;
+  font-size: 18px;
+  color: var(--green-main);
+}
+
+.reason p {
+  font-size: 14px;
+  color: var(--text-sub);
+}
+
+/* =====================
+   MODAL
+===================== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: var(--paper);
+  padding: 40px;
+  width: 90%;
+  max-width: 620px;
+  border-radius: 26px;
+  box-shadow: var(--shadow-hover);
+  animation: zoomFade 0.5s ease;
+}
+
+.modal-content h2 {
+  color: var(--green-dark);
+  margin-bottom: 12px;
+}
+
+.modal-content h3 {
+  margin-top: 20px;
+  color: var(--green-main);
+}
+
+.modal-content ul {
+  padding-left: 18px;
+  margin: 12px 0;
+}
+
+.modal-content img {
+  width: 100%;
+  border-radius: 16px;
+  margin-top: 18px;
+}
+
+.close {
+  position: absolute;
+  right: 26px;
+  top: 22px;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--text-sub);
+}
+
+/* =====================
+   ANIMATIONS
+===================== */
+.fade-in {
+  animation: fade 1.2s ease both;
+}
+
+.slide-up {
+  animation: slideUp 0.9s ease both;
+}
+/* =====================
+   FOOTER – SHELF RECYCLE
+   Đồng bộ màu eco – paper
+===================== */
+footer {
+  background: linear-gradient(
+    135deg,
+    var(--green-dark),
+    var(--green-main)
+  );
+  color: var(--paper);
+  padding: 50px 20px 40px;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.75;
+}
+
+.footer-content p {
+  margin: 8px 0;
+  font-size: 15px;
+  color: var(--paper);
+}
+
+.footer-content strong {
+  display: inline-block;
+  font-size: 18px;
+  letter-spacing: 0.6px;
+  color: #ffffff;
+}
+
+.footer-year {
+  margin-top: 20px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+/* Hover nhẹ – đúng tinh thần eco */
+footer:hover {
+  background: linear-gradient(
+    135deg,
+    var(--green-main),
+    var(--green-dark)
+  );
+  transition: background 0.4s ease;
+}
+
+/* =====================
+   📱 MOBILE RESPONSIVE
+===================== */
+@media (max-width: 600px) {
+  footer {
+    padding: 36px 15px 30px;
+  }
+
+  .footer-content strong {
+    font-size: 16px;
+  }
+
+  .footer-content p {
+    font-size: 14px;
+  }
+
+  .footer-year {
+    font-size: 12px;
+  }
+}
+.container-img {
+    width: 100%;
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.img-detail {
+    width: 160px !important;
+    height: 160px;
+    object-fit: cover;
+    object-position: center;
+    border: 2px solid var(--green-dark);
+}
+/* =====================
+   📱 TABLET RESPONSIVE
+===================== */
+@media (min-width: 601px) and (max-width: 900px) {
+  footer {
+    padding: 44px 20px 36px;
+  }
+
+  .footer-content p {
+    font-size: 14.5px;
+  }
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes zoomFade {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 768px) {
+  .hero {
+    padding: 70px 20px 50px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .why-recycle h2 {
+    font-size: 28px;
+  }
+}
