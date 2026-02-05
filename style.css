@@ -170,11 +170,13 @@ body {
   backdrop-filter: blur(6px);
   justify-content: center;
   align-items: center;
+  gap: 40px;
   z-index: 999;
 }
 
 .modal-content {
   background: var(--paper);
+  max-height: 715px;
   padding: 40px;
   width: 90%;
   max-width: 620px;
@@ -277,6 +279,10 @@ footer:hover {
    📱 MOBILE RESPONSIVE
 ===================== */
 @media (max-width: 600px) {
+  .modal {
+padding: 20px;
+
+}
   footer {
     padding: 36px 15px 30px;
   }
