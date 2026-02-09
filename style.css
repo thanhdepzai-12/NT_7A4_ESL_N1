@@ -17,6 +17,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
 }
 
 body {
@@ -172,6 +173,7 @@ body {
   align-items: center;
   gap: 40px;
   z-index: 999;
+  padding: 20px;
 }
 
 .modal-content {
@@ -184,7 +186,10 @@ body {
   box-shadow: var(--shadow-hover);
   animation: zoomFade 0.5s ease;
 }
-
+.modal-video {
+   max-height: 570px;
+    border-radius: 26px;
+}
 .modal-content h2 {
   color: var(--green-dark);
   margin-bottom: 12px;
@@ -280,9 +285,10 @@ footer:hover {
 ===================== */
 @media (max-width: 600px) {
   .modal {
-padding: 20px;
-
+padding:20px;
+gap: 20px;
 }
+
   footer {
     padding: 36px 15px 30px;
   }
@@ -317,6 +323,11 @@ padding: 20px;
    📱 TABLET RESPONSIVE
 ===================== */
 @media (min-width: 601px) and (max-width: 900px) {
+  .modal {
+    padding: 30px;
+    gap: 30px;
+  }
+ 
   footer {
     padding: 44px 20px 36px;
   }
