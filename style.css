@@ -189,6 +189,7 @@ body {
 .modal-video {
    max-height: 570px;
     border-radius: 26px;
+     z-index: 999;
 }
 .modal-content h2 {
   color: var(--green-dark);
