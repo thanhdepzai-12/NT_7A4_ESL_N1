@@ -188,7 +188,7 @@ body {
 }
 .modal-video {
   position: relative;
-   max-height: 570px;
+ max-width: clamp(200px, 35vw, 320px);
     border-radius: 26px;
     overflow: hidden;
     aspect-ratio: 9/16;
@@ -213,6 +213,7 @@ body {
   width: 100%;
   border-radius: 16px;
   margin-top: 18px;
+  aspect-ratio: 1/1;
 }
 
 .close {
@@ -289,6 +290,24 @@ footer:hover {
 /* =====================
    📱 MOBILE RESPONSIVE
 ===================== */
+
+.container-img {
+    width: 100%;
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.img-detail {
+  width: clamp(100px, 15vw, 160px) !important;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
+  border: 2px solid var(--green-dark);
+}
+/* =====================
+   📱 TABLET RESPONSIVE
+===================== */
 @media (max-width: 600px) {
   .modal {
     padding: 16px;
@@ -304,16 +323,13 @@ footer:hover {
     margin-left: 5px;
     width: 100%;
   }
-  .modal-video {      
-    max-height: 80vh;
+  .modal-video {     
     display: block;
     margin-right: 40px;
   }
 
   .modal-content {
-    
     max-height: 80vh;
-    overflow-y: auto;
     padding: 20px;
   }
 
@@ -333,23 +349,6 @@ footer:hover {
     font-size: 12px;
   }
 }
-.container-img {
-    width: 100%;
-    padding: 0 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.img-detail {
-    width: 160px !important;
-    height: 160px;
-    object-fit: cover;
-    object-position: center;
-    border: 2px solid var(--green-dark);
-}
-/* =====================
-   📱 TABLET RESPONSIVE
-===================== */
 @media (min-width: 601px) and (max-width: 900px) {
   .modal {
     padding: 30px;
