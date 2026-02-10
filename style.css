@@ -190,6 +190,8 @@ body {
   position: relative;
    max-height: 570px;
     border-radius: 26px;
+    overflow: hidden;
+    aspect-ratio: 9/16;
 
 }
 .modal-content h2 {
@@ -221,7 +223,9 @@ body {
   cursor: pointer;
   color: var(--text-sub);
 }
-
+video {
+    object-fit: cover;
+}
 /* =====================
    ANIMATIONS
 ===================== */
