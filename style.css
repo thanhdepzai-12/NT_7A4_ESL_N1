@@ -530,20 +530,20 @@ text-align: center;
 }
 
 #fortuneTitle {
-font-size: clamp(36px, 2.5vw, 42px);
+font-size: clamp(42px, 2.5vw, 42px);
   margin-bottom: 8px;
 text-shadow: 0px 0px 8px rgb(255 255 255);
  color: #92191b;
 }
 
 #fortuneMessage {
-  font-size: clamp(20px, 2vw, 22px);
+  font-size: clamp(22px, 2vw, 22px);
   color: #92191b;
   font-weight: bold;
 }
 .fortune-message-en {
   font-style: italic;
-  font-size: clamp(18px, 2vw, 22px);
+  font-size: clamp(22px, 2vw, 22px);
   color: #92191b;
   text-align: center;
   margin-top: 10px;
@@ -626,7 +626,32 @@ text-shadow: 0px 0px 8px rgb(255 255 255);
 @media (max-width: 768px) {
 
  .lixi-popup {
-    width: 420px;}
+       width:clamp(520px, 80vw, 320px);
+  }
+
+#fortuneTitle {
+font-size: clamp(60px, 2.5vw, 42px);
+  margin-bottom: 8px;
+text-shadow: 0px 0px 8px rgb(255 255 255);
+ color: #92191b;
+}
+
+#fortuneMessage {
+  font-size: clamp(30px, 2vw, 22px);
+  color: #92191b;
+  font-weight: bold;
+}
+.fortune-message-en {
+  font-style: italic;
+  font-size: clamp(22px, 2vw, 22px);
+  color: #92191b;
+  text-align: center;
+  margin-top: 10px;
+  opacity: 0.95;
+
+  /* Thiết lập kiểu ngoặc */
+  quotes: "“" "”";
+}
     .lixi-section {
         padding: 50px 15px;
     }
