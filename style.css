@@ -506,7 +506,7 @@ footer:hover {
 
 /* POPUP dùng background */
 .lixi-popup {
-  width: clamp(320px, 24vw, 420px);
+  width: clamp(320px, 70vw, 380px);
   aspect-ratio: 2 / 4;
 
   background: url("images/inner.png") center/cover no-repeat;
@@ -622,11 +622,11 @@ text-shadow: 0px 0px 8px rgb(255 255 255);
   width: clamp(250px, 15vw,320px);
   aspect-ratio: 1/1;
 }
-/* Responsive tinh chỉnh cho mobile */
+
 @media (max-width: 768px) {
 
  .lixi-popup {
-       width:clamp(520px, 80vw, 320px);
+       width:clamp(520px, 80vw, 320px) !important;
   }
 
 #fortuneTitle {
