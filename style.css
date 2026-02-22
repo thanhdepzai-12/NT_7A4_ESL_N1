@@ -541,7 +541,26 @@ text-shadow: 0px 0px 8px rgb(255 255 255);
   color: #92191b;
   font-weight: bold;
 }
+.fortune-message-en {
+  font-style: italic;
+  font-size: clamp(18px, 2vw, 22px);
+  color: #f5e6c8;
+  text-align: center;
+  line-height: 1.6;
+  margin-top: 10px;
+  opacity: 0.95;
 
+  /* Thiết lập kiểu ngoặc */
+  quotes: "“" "”";
+}
+
+.fortune-message-en::before {
+  content: open-quote;
+}
+
+.fortune-message-en::after {
+  content: close-quote;
+}
 /* Nút đóng */
 .close-btn {
   position: absolute;

@@ -77,6 +77,7 @@
     <div class="fortune-content">
       <h3 id="fortuneTitle"></h3>
       <p id="fortuneMessage"></p>
+      <p class="fortune-message-en"></p>
     </div>
 
     <button class="close-btn">Close</button>
@@ -212,13 +213,54 @@
      LUCKY MONEY SYSTEM
   ==========================*/
 
-  const fortunes = [
-    { id: 1, name: "Đại Cát", rate: 15, message: "Năm mới đại phúc đại lộc, thành công rực rỡ và mọi điều như ý!", color: "#FFD700" },
-    { id: 2, name: "Thượng Cát", rate: 20, message: "Tài lộc dồi dào, học tập và công việc đều thăng hoa.", color: "#FFB700" },
-    { id: 3, name: "Trung Cát", rate: 30, message: "Một năm bình an, thuận lợi và nhiều cơ hội mới.", color: "#FFA500" },
-    { id: 4, name: "Tiểu Cát", rate: 25, message: "Những niềm vui nhỏ sẽ mang đến may mắn bất ngờ.", color: "#FF8C00" },
-    { id: 5, name: "Cát Tường Khởi Đầu", rate: 10, message: "Khởi đầu suôn sẻ, hành trình mới đầy hy vọng.", color: "#FF6347" }
-  ];
+const fortunes = [
+  {
+    id: 1,
+    name: "Đại Cát",
+    rate: 20,
+    message: "Năm mới đại phúc đại lộc, thành công rực rỡ và mọi điều như ý!",
+    message_en: "May the New Year bring you great blessings, abundant prosperity, brilliant success, and the fulfillment of all your wishes.",
+    color: "#FFD700",
+    img: "images/gow.png"
+  },
+  {
+    id: 2,
+    name: "Thượng Cát",
+    rate: 20,
+    message: "Tài lộc dồi dào, học tập và công việc đều thăng hoa.",
+    message_en: "May wealth flow abundantly, and may your studies and career flourish throughout the year.",
+    color: "#FFB700",
+    img: "images/gowo.png"
+  },
+  {
+    id: 3,
+    name: "Trung Cát",
+    rate: 25,
+    message: "Một năm bình an, thuận lợi và nhiều cơ hội mới.",
+    message_en: "Wishing you a peaceful year filled with smooth progress and many new opportunities.",
+    color: "#FFA500",
+    img: "images/gowt.png"
+  },
+  {
+    id: 4,
+    name: "Tiểu Cát",
+    rate: 25,
+    message: "Những niềm vui nhỏ sẽ mang đến may mắn bất ngờ.",
+    message_en: "Small joys will lead to unexpected good fortune and delightful surprises.",
+    color: "#FF8C00",
+    img: "images/gowe.png"
+  },
+  {
+    id: 5,
+    name: "Cát Tường",
+    rate: 10,
+    message: "Khởi đầu suôn sẻ, hành trình mới đầy hy vọng.",
+    message_en: "May your new beginning be smooth and your journey ahead filled with hope.",
+    color: "#FF6347",
+    img: "images/gowf.png",
+
+  }
+];
 
   let hasOpened = false; // chỉ giới hạn trong 1 lần load trang
 
@@ -239,12 +281,13 @@
     const overlay = document.getElementById("lixiOverlay");
     const title = document.getElementById("fortuneTitle");
     const message = document.getElementById("fortuneMessage");
-
+const fortuneImage = document.querySelector(".fortune-image img");
+const messageEn = document.querySelector(".fortune-message-en");
     // Nếu đã mở trong lần load này
     if (hasOpened) {
-      title.innerHTML = "🎋Hết lượt bốc🎋";
+      title.innerHTML = "Hết lượt bốc";
       message.innerHTML = "Reload trang để bốc lại nhé!";
-
+      fortuneImage.src = "images/fail.png"; // ảnh trống
       overlay.classList.add("show");
       return;
     }
@@ -254,7 +297,8 @@
     title.innerHTML = `✨${fortune.name}✨`;
     message.innerHTML = fortune.message;
     title.style.color = fortune.color;
-
+  fortuneImage.src = fortune.img;
+messageEn.innerHTML = fortune.message_en;
     overlay.classList.add("show");
 
     hasOpened = true;
