@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>7A4 Group 1 - Shelf Recycle</title>
   <link rel="stylesheet" href="style.css">
+<link rel="preload" href="images/inner.png" as="image">
+<link rel="preload" href="images/envelope.png" as="image">
+<link rel="preload" href="images/light.png" as="image">
 </head>
 <body>
 
@@ -48,6 +51,38 @@
     </div>
   </div>
 </section>
+
+<!-- LUCKY MONEY SECTION -->
+<section class="lixi-section fade-in">
+  <h2>🧧 Lucky Money 2026</h2>
+  <p>Choose one red envelope to reveal your fortune!</p>
+
+  <div class="envelope-container">
+    <div class="envelope" onclick="openEnvelope(this)"></div>
+    <div class="envelope" onclick="openEnvelope(this)"></div>
+    <div class="envelope" onclick="openEnvelope(this)"></div>
+    <div class="envelope" onclick="openEnvelope(this)"></div>
+    <div class="envelope" onclick="openEnvelope(this)"></div>
+  </div>
+
+</section>
+
+
+<!-- LIXI OVERLAY -->
+<div id="lixiOverlay" class="lixi-overlay" onclick="closeLixi(event)">
+  <div class="lixi-popup">
+<div class="fortune-image">
+  <img src="images/gow.png" alt="">
+</div>
+    <div class="fortune-content">
+      <h3 id="fortuneTitle"></h3>
+      <p id="fortuneMessage"></p>
+    </div>
+
+    <button class="close-btn">Close</button>
+
+  </div>
+</div>
 
 <!-- MODAL -->
 <div id="modal1" class="modal">
@@ -140,6 +175,9 @@
 </footer>
 
 <script>
+  /* =========================
+     MODAL VIDEO
+  ==========================*/
   function stopVideo(modal) {
     const video = modal.querySelector("video");
     if (video) {
@@ -166,11 +204,71 @@
     }
   }
 
-  // PC
   window.addEventListener("click", handleOutsideClick);
-
-  // Mobile
   window.addEventListener("touchstart", handleOutsideClick);
+
+
+  /* =========================
+     LUCKY MONEY SYSTEM
+  ==========================*/
+
+  const fortunes = [
+    { id: 1, name: "Đại Cát", rate: 15, message: "Năm mới đại phúc đại lộc, thành công rực rỡ và mọi điều như ý!", color: "#FFD700" },
+    { id: 2, name: "Thượng Cát", rate: 20, message: "Tài lộc dồi dào, học tập và công việc đều thăng hoa.", color: "#FFB700" },
+    { id: 3, name: "Trung Cát", rate: 30, message: "Một năm bình an, thuận lợi và nhiều cơ hội mới.", color: "#FFA500" },
+    { id: 4, name: "Tiểu Cát", rate: 25, message: "Những niềm vui nhỏ sẽ mang đến may mắn bất ngờ.", color: "#FF8C00" },
+    { id: 5, name: "Cát Tường Khởi Đầu", rate: 10, message: "Khởi đầu suôn sẻ, hành trình mới đầy hy vọng.", color: "#FF6347" }
+  ];
+
+  let hasOpened = false; // chỉ giới hạn trong 1 lần load trang
+
+  function getRandomFortune() {
+    const total = fortunes.reduce((sum, f) => sum + f.rate, 0);
+    let random = Math.random() * total;
+
+    for (let fortune of fortunes) {
+      if (random < fortune.rate) {
+        return fortune;
+      }
+      random -= fortune.rate;
+    }
+  }
+
+  function openEnvelope() {
+
+    const overlay = document.getElementById("lixiOverlay");
+    const title = document.getElementById("fortuneTitle");
+    const message = document.getElementById("fortuneMessage");
+
+    // Nếu đã mở trong lần load này
+    if (hasOpened) {
+      title.innerHTML = "🎋Hết lượt bốc🎋";
+      message.innerHTML = "Reload trang để bốc lại nhé!";
+
+      overlay.classList.add("show");
+      return;
+    }
+
+    const fortune = getRandomFortune();
+
+    title.innerHTML = `✨${fortune.name}✨`;
+    message.innerHTML = fortune.message;
+    title.style.color = fortune.color;
+
+    overlay.classList.add("show");
+
+    hasOpened = true;
+  }
+
+  function closeLixi(e) {
+    if (
+      e.target.classList.contains("lixi-overlay") ||
+      e.target.classList.contains("close-btn")
+    ) {
+      document.getElementById("lixiOverlay").classList.remove("show");
+    }
+  }
+
 </script>
 
 

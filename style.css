@@ -1,6 +1,14 @@
 /* =====================
    RESET & VARIABLES
 ===================== */
+@import url('https://fonts.googleapis.com/css2?family=Protest+Revolution&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comforter&family=Oswald:wght@200..700&display=swap');
+
+
+#fortuneTitle {
+  font-family: "Protest Revolution", sans-serif;
+ font-weight: bold;
+}
 :root {
   --green-dark: #2f5d46;
   --green-main: #3b6b4c;
@@ -188,7 +196,7 @@ body {
 }
 .modal-video {
   position: relative;
- max-width: clamp(200px, 35vw, 320px);
+ max-width: clamp(250px, 35vw, 320px);
     border-radius: 26px;
     overflow: hidden;
     aspect-ratio: 9/16;
@@ -404,4 +412,204 @@ footer:hover {
   .why-recycle h2 {
     font-size: 28px;
   }
+}
+/* ===== LIXI SECTION ===== */
+/* =========================================
+   LIXI SECTION - NEW YEAR 2026 DESIGN
+   Tone: Deep Red & Gold Luxury
+   ========================================= */
+
+.lixi-section {
+    text-align: center;
+    padding: 80px 20px;
+    /* Sử dụng dải màu đỏ đậm chiều sâu */
+    background: radial-gradient(circle, #cc0000 0%, #800000 100%);
+  
+    color: #fff;
+    border-top: 5px solid #ffd700; /* Viền gold trên cùng */
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.3);
+}
+
+.envelope-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.envelope {
+  width: clamp(140px, 15vw, 400px);
+  aspect-ratio: 2 / 4;
+  height: auto;
+
+  background: url("images/envelope.png") center/cover no-repeat;
+  cursor: pointer;
+  border-radius: 8px;
+
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+  /* Idle animation nhẹ */
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Hover nổi lên */
+.envelope:hover {
+  transform: translateY(-18px) rotate(3deg) scale(1.05);
+  box-shadow: 0 25px 50px rgba(255, 215, 0, 0.3);
+  border: 1px solid #ffd700;
+}
+
+/* Click rung mạnh hơn */
+.envelope:active {
+  animation: clickShake 0.4s ease;
+}
+
+/* ===== FLOAT (nhẹ, sang) ===== */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* ===== SHAKE KHI CLICK ===== */
+@keyframes clickShake {
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-3px); }
+}
+
+
+/* =====================
+   LIXI OVERLAY & POPUP
+   ===================== */
+.lixi-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.lixi-overlay.show {
+  display: flex;
+}
+
+/* POPUP dùng background */
+.lixi-popup {
+  width: clamp(320px, 24vw, 420px);
+  aspect-ratio: 2 / 4;
+
+  background: url("images/inner.png") center/cover no-repeat;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  position: relative;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Nội dung fortune */
+.fortune-content {
+ color: #92191b;
+background: url(images/light.png) center/cover;
+aspect-ratio: 1/1;
+text-align: center;
+}
+
+#fortuneTitle {
+font-size: clamp(36px, 2.5vw, 42px);
+  margin-bottom: 8px;
+text-shadow: 0px 0px 8px rgb(255 255 255);
+ color: #92191b;
+}
+
+#fortuneMessage {
+  font-size: clamp(20px, 2vw, 22px);
+  color: #92191b;
+  font-weight: bold;
+}
+
+/* Nút đóng */
+.close-btn {
+  position: absolute;
+  bottom: 15px;
+  padding: 6px 14px;
+  border: none;
+  background: crimson;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.inner-img {
+    width: 320px;
+    max-width: 85vw;
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+}
+
+.popup-fortune {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Font chữ nghệ thuật cho câu chúc */
+    color: #ffd700;
+    font-size: 24px;
+    font-weight: 800;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px rgba(255,215,0,0.6);
+    width: 70%;
+    line-height: 1.4;
+    font-family: "serif"; /* Hoặc font thư pháp nếu có */
+}
+
+.close-btn {
+    margin-top: 30px;
+    padding: 12px 30px;
+    border: none;
+    background: linear-gradient(135deg, #ffd700, #b8860b);
+    color: #800000;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #fff, #ffd700);
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+}
+.fortune-image img {
+  width: clamp(250px, 15vw,320px);
+  aspect-ratio: 1/1;
+}
+/* Responsive tinh chỉnh cho mobile */
+@media (max-width: 768px) {
+
+ .lixi-popup {
+    width: 420px;}
+    .lixi-section {
+        padding: 50px 15px;
+    }
 }
