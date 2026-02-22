@@ -287,6 +287,7 @@ const messageEn = document.querySelector(".fortune-message-en");
     if (hasOpened) {
       title.innerHTML = "Hết lượt bốc";
       message.innerHTML = "Reload trang để bốc lại nhé!";
+      messageEn.innerHTML = "No more draws left. Please reload the page to try again!";
       fortuneImage.src = "images/fail.png"; // ảnh trống
       overlay.classList.add("show");
       return;
