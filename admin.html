@@ -122,7 +122,53 @@
       </div>
     </div>
   </section>
+<div id="editModal" class="admin-modal">
+  <div class="admin-modal-overlay" id="editModalOverlay"></div>
 
+  <div class="admin-modal-box">
+    <div class="admin-modal-head">
+      <h3>Sửa bài viết</h3>
+      <button type="button" id="closeEditModalBtn" class="admin-close-btn">×</button>
+    </div>
+
+    <form id="editForm" class="admin-edit-form">
+      <input type="hidden" id="editPostId" />
+      <input type="hidden" id="editPostType" />
+
+      <div class="admin-form-group">
+        <label for="editAuthorName">Tên tác giả</label>
+        <input type="text" id="editAuthorName" placeholder="Nhập tên tác giả" />
+      </div>
+
+      <div class="admin-form-group">
+        <label for="editTitle">Tiêu đề</label>
+        <input type="text" id="editTitle" placeholder="Nhập tiêu đề" />
+      </div>
+
+      <div class="admin-form-group">
+        <label for="editContent">Nội dung</label>
+        <textarea id="editContent" rows="6" placeholder="Nhập nội dung bài viết"></textarea>
+      </div>
+
+      <div class="admin-form-group">
+        <label for="editImageInput">Chọn ảnh mới</label>
+        <input type="file" id="editImageInput" accept="image/*" />
+      </div>
+
+      <div class="admin-form-group">
+        <label>Xem trước ảnh</label>
+        <img id="editPreviewImage" class="admin-edit-preview" alt="Preview image" />
+      </div>
+
+      <p id="editStatus" class="admin-edit-status"></p>
+
+      <div class="admin-edit-actions">
+        <button type="button" id="cancelEditBtn" class="admin-btn admin-btn-secondary">Hủy</button>
+        <button type="submit" id="saveEditBtn" class="admin-btn admin-btn-primary">Lưu thay đổi</button>
+      </div>
+    </form>
+  </div>
+</div>
   <script type="module" src="./admin.js"></script>
 </body>
 </html>

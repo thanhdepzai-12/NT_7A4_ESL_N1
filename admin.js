@@ -18,15 +18,12 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-/* =========================
-   CONFIG
-========================= */
 const ALLOWED_ADMIN_EMAIL = "mrthanh20069@gmail.com";
 const PAGE_SIZE = 5;
 
-/* =========================
-   DOM
-========================= */
+const CLOUDINARY_CLOUD_NAME = "db7hl3qma";
+const CLOUDINARY_UPLOAD_PRESET = "community_unsigned";
+
 const adminLoginWrap = document.getElementById("adminLoginWrap");
 const adminDashboard = document.getElementById("adminDashboard");
 const adminLoginForm = document.getElementById("adminLoginForm");
@@ -37,25 +34,34 @@ const logoutBtn = document.getElementById("logoutBtn");
 
 const pendingPostsTableBody = document.getElementById("pendingPostsTableBody");
 const approvedPostsTableBody = document.getElementById("approvedPostsTableBody");
-
 const pendingPagination = document.getElementById("pendingPagination");
 const approvedPagination = document.getElementById("approvedPagination");
-
 const pendingCount = document.getElementById("pendingCount");
 const approvedCount = document.getElementById("approvedCount");
 
-/* =========================
-   STATE
-========================= */
+const editModal = document.getElementById("editModal");
+const editModalOverlay = document.getElementById("editModalOverlay");
+const closeEditModalBtn = document.getElementById("closeEditModalBtn");
+const cancelEditBtn = document.getElementById("cancelEditBtn");
+const editForm = document.getElementById("editForm");
+const editPostId = document.getElementById("editPostId");
+const editPostType = document.getElementById("editPostType");
+const editAuthorName = document.getElementById("editAuthorName");
+const editTitle = document.getElementById("editTitle");
+const editContent = document.getElementById("editContent");
+const editImageInput = document.getElementById("editImageInput");
+const editPreviewImage = document.getElementById("editPreviewImage");
+const editStatus = document.getElementById("editStatus");
+const saveEditBtn = document.getElementById("saveEditBtn");
+
 let pendingPosts = [];
 let approvedPosts = [];
-
 let pendingPage = 1;
 let approvedPage = 1;
 
-/* =========================
-   HELPERS
-========================= */
+let currentEditImageUrl = "";
+let newEditImageFile = null;
+
 function escapeHtml(str = "") {
   return str
     .replaceAll("&", "&amp;")
@@ -66,7 +72,7 @@ function escapeHtml(str = "") {
 }
 
 function formatDate(value) {
-  if (!value) return "Just now";
+  if (!value) return "Vừa xong";
   const date = value.toDate ? value.toDate() : new Date(value);
   return date.toLocaleString("vi-VN");
 }
@@ -74,6 +80,11 @@ function formatDate(value) {
 function setLoginStatus(message, isError = false) {
   adminLoginStatus.textContent = message;
   adminLoginStatus.style.color = isError ? "#d93025" : "#1b7f3a";
+}
+
+function setEditStatus(message, isError = false) {
+  editStatus.textContent = message;
+  editStatus.style.color = isError ? "#d93025" : "#1b7f3a";
 }
 
 function showLogin() {
@@ -123,11 +134,7 @@ function renderExpandableText(text = "") {
       <p class="admin-post-text ${collapsed ? "is-collapsed" : ""}" data-full="0">
         ${safeText}
       </p>
-      ${
-        collapsed
-          ? `<button type="button" class="admin-more-btn">Thêm</button>`
-          : ""
-      }
+      ${collapsed ? `<button type="button" class="admin-more-btn">Thêm</button>` : ""}
     </div>
   `;
 }
@@ -139,9 +146,7 @@ function renderPostRow(id, post, isPending = true) {
 
   return `
     <tr>
-      <td>
-        ${getImageCell(post.imageUrl, post.title)}
-      </td>
+      <td>${getImageCell(post.imageUrl, post.title)}</td>
 
       <td>
         <div class="admin-post-cell">
@@ -170,11 +175,13 @@ function renderPostRow(id, post, isPending = true) {
           ${
             isPending
               ? `
-                <button class="approve-btn" data-id="${id}">Approve</button>
-                <button class="reject-btn" data-id="${id}">Reject</button>
+                <button class="edit-btn" data-id="${id}" data-type="pending">Sửa</button>
+                <button class="approve-btn" data-id="${id}">Duyệt</button>
+                <button class="reject-btn" data-id="${id}">Xóa</button>
               `
               : `
-                <button class="delete-btn" data-id="${id}">Delete</button>
+                <button class="edit-btn" data-id="${id}" data-type="approved">Sửa</button>
+                <button class="delete-btn" data-id="${id}">Xóa</button>
               `
           }
         </div>
@@ -227,14 +234,32 @@ function renderPagination(totalItems, currentPage, mountEl, onChange) {
   });
 }
 
-/* =========================
-   RENDER TABLES
-========================= */
+async function uploadToCloudinary(file) {
+  const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  formData.append("folder", "community-posts");
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    body: formData
+  });
+
+  if (!response.ok) {
+    throw new Error("Cloudinary upload failed");
+  }
+
+  const data = await response.json();
+  return data.secure_url;
+}
+
 function renderPendingTable() {
-  pendingCount.textContent = `${pendingPosts.length} items`;
+  pendingCount.textContent = `${pendingPosts.length} bài`;
 
   if (!pendingPosts.length) {
-    pendingPostsTableBody.innerHTML = renderEmptyRow("No pending posts.");
+    pendingPostsTableBody.innerHTML = renderEmptyRow("Không có bài chờ duyệt.");
     pendingPagination.innerHTML = "";
     return;
   }
@@ -255,10 +280,10 @@ function renderPendingTable() {
 }
 
 function renderApprovedTable() {
-  approvedCount.textContent = `${approvedPosts.length} items`;
+  approvedCount.textContent = `${approvedPosts.length} bài`;
 
   if (!approvedPosts.length) {
-    approvedPostsTableBody.innerHTML = renderEmptyRow("No approved posts.");
+    approvedPostsTableBody.innerHTML = renderEmptyRow("Không có bài đã duyệt.");
     approvedPagination.innerHTML = "";
     return;
   }
@@ -278,9 +303,6 @@ function renderApprovedTable() {
   });
 }
 
-/* =========================
-   AUTH
-========================= */
 async function handleLogin(event) {
   event.preventDefault();
 
@@ -288,7 +310,7 @@ async function handleLogin(event) {
   const password = adminPassword.value.trim();
 
   if (!email || !password) {
-    setLoginStatus("Please enter email and password.", true);
+    setLoginStatus("Vui lòng nhập email và mật khẩu.", true);
     return;
   }
 
@@ -298,20 +320,17 @@ async function handleLogin(event) {
 
     if (user.email !== ALLOWED_ADMIN_EMAIL) {
       await signOut(auth);
-      setLoginStatus("This account is not allowed.", true);
+      setLoginStatus("Tài khoản này không có quyền admin.", true);
       return;
     }
 
-    setLoginStatus("Login successful.");
+    setLoginStatus("Đăng nhập thành công.");
   } catch (error) {
     console.error(error);
-    setLoginStatus("Login failed.", true);
+    setLoginStatus("Đăng nhập thất bại.", true);
   }
 }
 
-/* =========================
-   FIRESTORE WATCHERS
-========================= */
 function watchPendingPosts() {
   const q = query(
     collection(db, "posts"),
@@ -330,7 +349,7 @@ function watchPendingPosts() {
     },
     (error) => {
       console.error(error);
-      pendingPostsTableBody.innerHTML = renderEmptyRow("Cannot load pending posts.");
+      pendingPostsTableBody.innerHTML = renderEmptyRow("Không tải được bài chờ duyệt.");
     }
   );
 }
@@ -353,14 +372,98 @@ function watchApprovedPosts() {
     },
     (error) => {
       console.error(error);
-      approvedPostsTableBody.innerHTML = renderEmptyRow("Cannot load approved posts.");
+      approvedPostsTableBody.innerHTML = renderEmptyRow("Không tải được bài đã duyệt.");
     }
   );
 }
 
-/* =========================
-   ACTIONS
-========================= */
+function findPostById(postId, type) {
+  const source = type === "approved" ? approvedPosts : pendingPosts;
+  return source.find((item) => item.id === postId) || null;
+}
+
+function openEditModal(postId, type) {
+  const found = findPostById(postId, type);
+  if (!found) {
+    alert("Không tìm thấy bài viết.");
+    return;
+  }
+
+  const post = found.data;
+
+  editPostId.value = postId;
+  editPostType.value = type;
+  editAuthorName.value = post.authorName || "";
+  editTitle.value = post.title || "";
+  editContent.value = post.content || "";
+
+  currentEditImageUrl = post.imageUrl || "";
+  newEditImageFile = null;
+  editImageInput.value = "";
+
+  if (currentEditImageUrl) {
+    editPreviewImage.src = currentEditImageUrl;
+    editPreviewImage.style.display = "block";
+  } else {
+    editPreviewImage.src = "";
+    editPreviewImage.style.display = "none";
+  }
+
+  setEditStatus("");
+  editModal.classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+
+function closeEditModal() {
+  editModal.classList.remove("show");
+  document.body.style.overflow = "";
+}
+
+async function saveEditPost(event) {
+  event.preventDefault();
+
+  const postId = editPostId.value.trim();
+  const author = editAuthorName.value.trim();
+  const title = editTitle.value.trim();
+  const content = editContent.value.trim();
+
+  if (!postId || !author || !title || !content) {
+    setEditStatus("Vui lòng nhập đầy đủ thông tin.", true);
+    return;
+  }
+
+  saveEditBtn.disabled = true;
+  saveEditBtn.textContent = "Đang lưu...";
+  setEditStatus("Đang cập nhật bài viết...");
+
+  try {
+    let nextImageUrl = currentEditImageUrl || "";
+
+    if (newEditImageFile) {
+      setEditStatus("Đang upload ảnh lên Cloudinary...");
+      nextImageUrl = await uploadToCloudinary(newEditImageFile);
+    }
+
+    await updateDoc(doc(db, "posts", postId), {
+      authorName: author,
+      title,
+      content,
+      imageUrl: nextImageUrl,
+      updatedAt: serverTimestamp(),
+      updatedBy: auth.currentUser?.email || null
+    });
+
+    setEditStatus("Lưu thành công.");
+    closeEditModal();
+  } catch (error) {
+    console.error(error);
+    setEditStatus("Lưu thất bại.", true);
+  } finally {
+    saveEditBtn.disabled = false;
+    saveEditBtn.textContent = "Lưu thay đổi";
+  }
+}
+
 async function approvePost(postId) {
   try {
     await updateDoc(doc(db, "posts", postId), {
@@ -370,7 +473,7 @@ async function approvePost(postId) {
     });
   } catch (error) {
     console.error(error);
-    alert("Approve failed.");
+    alert("Duyệt bài thất bại.");
   }
 }
 
@@ -379,7 +482,7 @@ async function rejectPost(postId) {
     await deleteDoc(doc(db, "posts", postId));
   } catch (error) {
     console.error(error);
-    alert("Reject failed.");
+    alert("Xóa bài thất bại.");
   }
 }
 
@@ -388,13 +491,10 @@ async function deleteApprovedPost(postId) {
     await deleteDoc(doc(db, "posts", postId));
   } catch (error) {
     console.error(error);
-    alert("Delete failed.");
+    alert("Xóa bài thất bại.");
   }
 }
 
-/* =========================
-   CONTENT TOGGLE
-========================= */
 function toggleText(buttonEl) {
   const wrap = buttonEl.closest(".admin-post-text-wrap");
   const textEl = wrap?.querySelector(".admin-post-text");
@@ -413,13 +513,16 @@ function toggleText(buttonEl) {
   }
 }
 
-/* =========================
-   EVENTS
-========================= */
 pendingPostsTableBody.addEventListener("click", async (event) => {
   const moreBtn = event.target.closest(".admin-more-btn");
   if (moreBtn) {
     toggleText(moreBtn);
+    return;
+  }
+
+  const editBtn = event.target.closest(".edit-btn");
+  if (editBtn) {
+    openEditModal(editBtn.dataset.id, editBtn.dataset.type);
     return;
   }
 
@@ -431,7 +534,7 @@ pendingPostsTableBody.addEventListener("click", async (event) => {
 
   const rejectBtn = event.target.closest(".reject-btn");
   if (rejectBtn) {
-    const ok = confirm("Reject and delete this post?");
+    const ok = confirm("Bạn có chắc muốn xóa bài này?");
     if (ok) {
       await rejectPost(rejectBtn.dataset.id);
     }
@@ -445,12 +548,42 @@ approvedPostsTableBody.addEventListener("click", async (event) => {
     return;
   }
 
+  const editBtn = event.target.closest(".edit-btn");
+  if (editBtn) {
+    openEditModal(editBtn.dataset.id, editBtn.dataset.type);
+    return;
+  }
+
   const deleteBtn = event.target.closest(".delete-btn");
   if (deleteBtn) {
-    const ok = confirm("Delete this approved post?");
+    const ok = confirm("Bạn có chắc muốn xóa bài đã duyệt này?");
     if (ok) {
       await deleteApprovedPost(deleteBtn.dataset.id);
     }
+  }
+});
+
+editImageInput.addEventListener("change", (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  newEditImageFile = file;
+
+  const tempUrl = URL.createObjectURL(file);
+  editPreviewImage.src = tempUrl;
+  editPreviewImage.style.display = "block";
+
+  setEditStatus("Đã chọn ảnh mới. Khi lưu sẽ upload lên Cloudinary.");
+});
+
+closeEditModalBtn.addEventListener("click", closeEditModal);
+cancelEditBtn.addEventListener("click", closeEditModal);
+editModalOverlay.addEventListener("click", closeEditModal);
+editForm.addEventListener("submit", saveEditPost);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && editModal.classList.contains("show")) {
+    closeEditModal();
   }
 });
 
@@ -460,9 +593,6 @@ logoutBtn.addEventListener("click", async () => {
 
 adminLoginForm.addEventListener("submit", handleLogin);
 
-/* =========================
-   INIT
-========================= */
 onAuthStateChanged(auth, (user) => {
   if (user && user.email === ALLOWED_ADMIN_EMAIL) {
     showDashboard();
