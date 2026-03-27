@@ -52,7 +52,7 @@ body {
   align-items: end;
 }
 .hero-logo img {
-  width: clamp(500px, 700px, 800px);
+  width: 700px; 
   height: auto;
   padding-inline: 4rem;
 }
@@ -836,6 +836,9 @@ video {
 }
 
 @media (max-width: 768px) {
+  .hero-logo img {
+    width: 390px;
+  }
   .hero {
     padding: 70px 20px 50px;
   }
