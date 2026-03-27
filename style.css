@@ -373,7 +373,7 @@ body {
 }
 
 .modal-content h2 {
-  color: var(--green-dark);
+  color: var(--green-main);
   margin-bottom: 12px;
 }
 .modal-content h3 {

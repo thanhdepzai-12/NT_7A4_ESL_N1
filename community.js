@@ -44,6 +44,11 @@ let editedBlob = null;
 let editorCanvas = null;
 let currentImageObject = null;
 
+// Mỗi lần reload trang sẽ được bấm reaction lại từ đầu
+window.addEventListener("load", () => {
+  sessionStorage.clear();
+});
+
 function escapeHtml(str = "") {
   return str
     .replaceAll("&", "&amp;")
@@ -59,7 +64,7 @@ function setStatus(message, isError = false) {
 }
 
 function formatDate(value) {
-  if (!value) return "Just now";
+  if (!value) return "Vừa xong";
   const date = value.toDate ? value.toDate() : new Date(value);
   return date.toLocaleString("vi-VN");
 }
@@ -78,6 +83,7 @@ function initCanvas() {
 
 function resetCanvas() {
   if (!editorCanvas) return;
+
   editorCanvas.clear();
   editorCanvas.backgroundColor = "#f2f4f7";
   editorCanvas.renderAll();
@@ -86,7 +92,7 @@ function resetCanvas() {
 
 function openEditor() {
   if (!selectedFile) {
-    setStatus("Please choose an image first.", true);
+    setStatus("Vui lòng chọn ảnh trước.", true);
     return;
   }
 
@@ -94,6 +100,7 @@ function openEditor() {
   resetCanvas();
 
   const reader = new FileReader();
+
   reader.onload = function (e) {
     fabric.Image.fromURL(e.target.result, function (img) {
       const maxWidth = 700;
@@ -125,9 +132,11 @@ function closeEditor() {
 }
 
 function cropActiveImage() {
+  if (!editorCanvas) return;
+
   const active = editorCanvas.getActiveObject();
   if (!active || active.type !== "image") {
-    alert("Please select image first.");
+    alert("Vui lòng chọn ảnh trước.");
     return;
   }
 
@@ -151,9 +160,11 @@ function cropActiveImage() {
 }
 
 function applyCrop() {
+  if (!editorCanvas) return;
+
   const active = editorCanvas.getActiveObject();
   if (!active || !active.cropMarker || !currentImageObject) {
-    alert("Please create crop area first.");
+    alert("Vui lòng tạo vùng crop trước.");
     return;
   }
 
@@ -162,8 +173,8 @@ function applyCrop() {
 
   const cropX = (rect.left - img.left) / img.scaleX;
   const cropY = (rect.top - img.top) / img.scaleY;
-  const cropWidth = rect.width * rect.scaleX / img.scaleX;
-  const cropHeight = rect.height * rect.scaleY / img.scaleY;
+  const cropWidth = (rect.width * rect.scaleX) / img.scaleX;
+  const cropHeight = (rect.height * rect.scaleY) / img.scaleY;
 
   img.set({
     cropX: Math.max(0, cropX),
@@ -181,19 +192,24 @@ function applyCrop() {
 }
 
 function rotateSelected(angle) {
+  if (!editorCanvas) return;
+
   const active = editorCanvas.getActiveObject();
   if (!active) {
-    alert("Select image or text first.");
+    alert("Vui lòng chọn ảnh hoặc chữ trước.");
     return;
   }
+
   active.rotate((active.angle || 0) + angle);
   editorCanvas.renderAll();
 }
 
 function zoomSelected(delta) {
+  if (!editorCanvas) return;
+
   const active = editorCanvas.getActiveObject();
   if (!active) {
-    alert("Select object first.");
+    alert("Vui lòng chọn đối tượng trước.");
     return;
   }
 
@@ -208,9 +224,11 @@ function zoomSelected(delta) {
 }
 
 function addTextToCanvas() {
+  if (!editorCanvas) return;
+
   const text = overlayTextInput.value.trim();
   if (!text) {
-    alert("Enter text first.");
+    alert("Vui lòng nhập chữ trước.");
     return;
   }
 
@@ -231,6 +249,8 @@ function addTextToCanvas() {
 }
 
 function saveEditedImage() {
+  if (!editorCanvas) return;
+
   const dataUrl = editorCanvas.toDataURL({
     format: "png",
     quality: 1
@@ -240,17 +260,18 @@ function saveEditedImage() {
   postPreviewImage.style.display = "block";
 
   fetch(dataUrl)
-    .then(res => res.blob())
-    .then(blob => {
+    .then((res) => res.blob())
+    .then((blob) => {
       editedBlob = blob;
       closeEditor();
-      setStatus("Edited image ready.");
+      setStatus("Ảnh đã chỉnh sửa xong.");
     })
-    .catch(() => setStatus("Cannot save edited image.", true));
+    .catch(() => setStatus("Không thể lưu ảnh đã chỉnh sửa.", true));
 }
 
 async function uploadToCloudinary(fileOrBlob) {
   const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
   const formData = new FormData();
   formData.append("file", fileOrBlob);
   formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
@@ -277,13 +298,13 @@ async function handleSubmit(e) {
   const content = postContent.value.trim();
 
   if (!name || !title || !content) {
-    setStatus("Please enter full information.", true);
+    setStatus("Vui lòng nhập đầy đủ thông tin.", true);
     return;
   }
 
   submitPostBtn.disabled = true;
-  submitPostBtn.textContent = "Posting...";
-  setStatus("Submitting post...");
+  submitPostBtn.textContent = "Đang đăng...";
+  setStatus("Đang gửi bài viết...");
 
   try {
     let imageUrl = "";
@@ -319,13 +340,13 @@ async function handleSubmit(e) {
     postPreviewImage.src = "";
     postPreviewImage.style.display = "none";
 
-    setStatus("Your post has been sent and is waiting for approval.");
+    setStatus("Bài viết đã được gửi và đang chờ duyệt.");
   } catch (error) {
     console.error(error);
-    setStatus("Submit failed.", true);
+    setStatus("Gửi bài thất bại.", true);
   } finally {
     submitPostBtn.disabled = false;
-    submitPostBtn.textContent = "Post";
+    submitPostBtn.textContent = "Đăng bài";
   }
 }
 
@@ -339,6 +360,7 @@ function reactionLabel(key) {
     angry: "😡 Angry"
   }[key];
 }
+
 function shouldCollapseText(text = "", limit = 220) {
   return text.trim().length > limit;
 }
@@ -360,6 +382,7 @@ function renderExpandableFeedText(text = "") {
     </div>
   `;
 }
+
 function renderPostCard(id, post) {
   const reactions = post.reactions || {};
   const reactionKeys = ["like", "love", "haha", "wow", "sad", "angry"];
@@ -367,7 +390,9 @@ function renderPostCard(id, post) {
   return `
     <article class="feed-card">
       <div class="feed-card-head">
-        <div class="feed-avatar">${escapeHtml((post.authorName || "U").charAt(0).toUpperCase())}</div>
+        <div class="feed-avatar">
+          ${escapeHtml((post.authorName || "U").charAt(0).toUpperCase())}
+        </div>
         <div>
           <h3>${escapeHtml(post.authorName || "Unknown")}</h3>
           <p>${formatDate(post.approvedAt || post.createdAt)}</p>
@@ -377,15 +402,23 @@ function renderPostCard(id, post) {
       <div class="feed-card-body">
         <h4>${escapeHtml(post.title || "")}</h4>
         ${renderExpandableFeedText(post.content || "")}
-        ${post.imageUrl ? `<img class="feed-image" src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.title || "Post image")}">` : ""}
+        ${
+          post.imageUrl
+            ? `<img class="feed-image" src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.title || "Post image")}">`
+            : ""
+        }
       </div>
 
       <div class="feed-reactions">
-        ${reactionKeys.map(key => `
-          <button class="reaction-btn" data-id="${id}" data-reaction="${key}">
-            ${reactionLabel(key)} <span>${reactions[key] || 0}</span>
-          </button>
-        `).join("")}
+        ${reactionKeys
+          .map(
+            (key) => `
+            <button class="reaction-btn" data-id="${id}" data-reaction="${key}">
+              ${reactionLabel(key)} <span>${reactions[key] || 0}</span>
+            </button>
+          `
+          )
+          .join("")}
       </div>
     </article>
   `;
@@ -398,34 +431,42 @@ function listenApprovedPosts() {
     orderBy("approvedAt", "desc")
   );
 
-  onSnapshot(q, (snapshot) => {
-    if (snapshot.empty) {
-      approvedPostsList.innerHTML = `<p class="empty-feed">No approved posts yet.</p>`;
-      return;
+  onSnapshot(
+    q,
+    (snapshot) => {
+      if (snapshot.empty) {
+        approvedPostsList.innerHTML =
+          `<p class="empty-feed">Chưa có bài viết nào được duyệt.</p>`;
+        return;
+      }
+
+      let html = "";
+      snapshot.forEach((item) => {
+        html += renderPostCard(item.id, item.data());
+      });
+
+      approvedPostsList.innerHTML = html;
+    },
+    (error) => {
+      console.error(error);
+      approvedPostsList.innerHTML =
+        `<p class="empty-feed">Không thể tải bài viết.</p>`;
     }
-
-    let html = "";
-    snapshot.forEach((item) => {
-      html += renderPostCard(item.id, item.data());
-    });
-
-    approvedPostsList.innerHTML = html;
-  }, (error) => {
-    console.error(error);
-    approvedPostsList.innerHTML = `<p class="empty-feed">Cannot load feed.</p>`;
-  });
+  );
 }
 
+// Mỗi bài viết chỉ được bấm 1 reaction trong 1 lần tải trang
 async function handleReaction(e) {
   const btn = e.target.closest(".reaction-btn");
   if (!btn) return;
 
   const postId = btn.dataset.id;
   const reaction = btn.dataset.reaction;
-  const localKey = `reacted_${postId}_${reaction}`;
 
-  if (localStorage.getItem(localKey)) {
-    alert("You already used this reaction.");
+  const sessionKey = `reacted_post_${postId}`;
+
+  if (sessionStorage.getItem(sessionKey)) {
+    alert("Bạn đã thả cảm xúc cho bài này rồi. Reload trang để bấm lại.");
     return;
   }
 
@@ -434,7 +475,7 @@ async function handleReaction(e) {
     const snap = await getDoc(postRef);
 
     if (!snap.exists()) {
-      alert("Post not found.");
+      alert("Không tìm thấy bài viết.");
       return;
     }
 
@@ -442,10 +483,10 @@ async function handleReaction(e) {
       [`reactions.${reaction}`]: increment(1)
     });
 
-    localStorage.setItem(localKey, "1");
+    sessionStorage.setItem(sessionKey, reaction);
   } catch (error) {
     console.error(error);
-    alert("Reaction failed.");
+    alert("Bấm cảm xúc thất bại.");
   }
 }
 
@@ -459,7 +500,7 @@ postImageInput.addEventListener("change", (e) => {
   const tempUrl = URL.createObjectURL(file);
   postPreviewImage.src = tempUrl;
   postPreviewImage.style.display = "block";
-  setStatus("Image selected.");
+  setStatus("Đã chọn ảnh.");
 });
 
 openEditorBtn.addEventListener("click", openEditor);
@@ -474,6 +515,7 @@ addTextBtn.addEventListener("click", addTextToCanvas);
 saveEditedImageBtn.addEventListener("click", saveEditedImage);
 
 postForm.addEventListener("submit", handleSubmit);
+
 approvedPostsList.addEventListener("click", (e) => {
   const moreBtn = e.target.closest(".feed-more-btn");
 
@@ -491,7 +533,7 @@ approvedPostsList.addEventListener("click", (e) => {
     } else {
       textEl.classList.remove("is-collapsed");
       textEl.dataset.full = "1";
-      moreBtn.textContent = "Rút gon";
+      moreBtn.textContent = "Rút gọn";
     }
     return;
   }
