@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Feed</title>
+  <link rel="stylesheet" href="community.css" />
+   <link rel="stylesheet" href="style.css">
+</head>
+<body class="community-page">
+  <header class="community-topbar">
+    <div class="community-topbar-inner">
+      <a href="./index.html" class="topbar-brand">♻ Recycle Community</a>
+      <div class="topbar-actions">
+        <a href="./index.html" class="topbar-link">Home</a>
+        <a href="./admin.html" class="topbar-link">Admin</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="community-layout">
+    <aside class="community-left">
+      <div class="community-side-card">
+        <h3>Welcome</h3>
+        <p>Share your recycle ideas, green tips and creative eco products.</p>
+      </div>
+
+      <div class="community-side-card">
+        <h3>How it works</h3>
+        <ul>
+          <li>Post without login</li>
+          <li>Admin reviews first</li>
+          <li>Approved posts appear instantly</li>
+        </ul>
+      </div>
+    </aside>
+
+    <section class="community-center">
+      <div class="create-post-card">
+        <div class="create-post-head">
+          <h2>Create Post</h2>
+          <p>Write like a social feed post</p>
+        </div>
+
+        <form id="postForm" class="post-form">
+          <input type="text" id="authorName" placeholder="Your name" maxlength="60" required />
+          <input type="text" id="postTitle" placeholder="Post title" maxlength="120" required />
+          <textarea id="postContent" placeholder="What are you thinking?" maxlength="3000" required></textarea>
+
+          <div class="post-upload-row">
+            <input type="file" id="postImageInput" accept="image/*" />
+            <button type="button" id="openEditorBtn" class="btn-soft">Edit image</button>
+          </div>
+
+          <div class="post-preview-wrap">
+            <img id="postPreviewImage" alt="Preview image" style="display:none;" />
+          </div>
+
+          <div class="submit-row">
+            <button type="submit" id="submitPostBtn" class="btn-primary">Post</button>
+          </div>
+
+          <p id="postStatus" class="status-text"></p>
+        </form>
+      </div>
+
+      <div class="feed-list" id="approvedPostsList">
+        <p class="empty-feed">No approved posts yet.</p>
+      </div>
+    </section>
+
+    <aside class="community-right">
+      <div class="community-side-card">
+        <h3>Community Tips</h3>
+        <p>Best posts are clear, positive, and include useful images.</p>
+      </div>
+
+      <div class="community-side-card">
+        <h3>Reactions</h3>
+        <p>Readers can react with Like, Love, Haha, Wow, Sad, Angry.</p>
+      </div>
+    </aside>
+  </main>
+
+  <div id="editorModal" class="editor-modal">
+    <div class="editor-box">
+      <div class="editor-top">
+        <h3>Edit Image</h3>
+        <button type="button" id="closeEditorBtn" class="editor-close-btn">×</button>
+      </div>
+
+      <div class="editor-toolbar">
+        <button type="button" id="cropBtn">Crop</button>
+        <button type="button" id="applyCropBtn">Apply Crop</button>
+        <button type="button" id="rotateLeftBtn">Rotate -90°</button>
+        <button type="button" id="rotateRightBtn">Rotate +90°</button>
+        <button type="button" id="zoomInBtn">Zoom +</button>
+        <button type="button" id="zoomOutBtn">Zoom -</button>
+      </div>
+
+      <div class="editor-add-text">
+        <input type="text" id="overlayTextInput" placeholder="Add text on image" />
+        <button type="button" id="addTextBtn">Add text</button>
+      </div>
+
+      <div class="editor-canvas-wrap">
+        <canvas id="editorCanvas"></canvas>
+      </div>
+
+      <div class="editor-actions">
+        <button type="button" id="saveEditedImageBtn" class="btn-primary">Save edited image</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <script type="module" src="./community.js"></script>
+</body>
+</html>

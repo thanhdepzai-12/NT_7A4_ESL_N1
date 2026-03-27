@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Blog Manager</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-page">
+  <header class="community-topbar">
+    <div class="community-topbar-inner">
+      <a href="./index.html" class="topbar-brand">Recycle Community</a>
+      <div class="topbar-actions">
+        <a href="./community.html" class="topbar-link">Community</a>
+        <a href="./index.html" class="topbar-link">Home</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="admin-login-wrap" id="adminLoginWrap">
+    <div class="admin-card">
+      <h1>Admin Login</h1>
+      <p>Only approved admin can manage posts</p>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label for="adminEmail">Email</label>
+          <input type="email" id="adminEmail" required />
+        </div>
+
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" required />
+        </div>
+
+        <button type="submit" class="btn-primary">Login</button>
+        <p id="adminLoginStatus" class="status-text"></p>
+      </form>
+    </div>
+  </section>
+
+  <section class="admin-dashboard" id="adminDashboard" style="display:none;">
+    <div class="admin-topbar">
+      <div>
+        <h1>Post Management</h1>
+        <p>Approve posts before they appear on community feed</p>
+      </div>
+
+      <div class="admin-topbar-actions">
+        <button id="logoutBtn" class="btn-soft">Logout</button>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <!-- Pending -->
+      <div class="admin-panel">
+        <div class="admin-panel-head">
+          <div>
+            <h2>Pending Posts</h2>
+            <p>Review, approve or reject submitted posts</p>
+          </div>
+          <div class="admin-pill" id="pendingCount">0 items</div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width:72px;">Image</th>
+                <th>Post</th>
+                <th style="width:130px;">Author</th>
+                <th style="width:170px;">Created</th>
+                <th style="width:170px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="pendingPostsTableBody">
+              <tr>
+                <td colspan="5">
+                  <div class="empty-feed admin-empty-table">No pending posts.</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="admin-pagination" id="pendingPagination"></div>
+      </div>
+
+      <!-- Approved -->
+      <div class="admin-panel">
+        <div class="admin-panel-head">
+          <div>
+            <h2>Approved Posts</h2>
+            <p>Published posts currently visible on the community feed</p>
+          </div>
+          <div class="admin-pill approved" id="approvedCount">0 items</div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width:72px;">Image</th>
+                <th>Post</th>
+                <th style="width:130px;">Author</th>
+                <th style="width:170px;">Published</th>
+                <th style="width:140px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="approvedPostsTableBody">
+              <tr>
+                <td colspan="5">
+                  <div class="empty-feed admin-empty-table">No approved posts.</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="admin-pagination" id="approvedPagination"></div>
+      </div>
+    </div>
+  </section>
+
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>
