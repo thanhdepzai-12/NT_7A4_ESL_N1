@@ -5,6 +5,9 @@
   color: var(--text-main);
 }
 
+/* =========================
+   TOPBAR
+========================= */
 .community-topbar {
   position: sticky;
   top: 0;
@@ -77,6 +80,9 @@
   box-shadow: 0 10px 20px rgba(28, 78, 46, 0.08);
 }
 
+/* =========================
+   LAYOUT
+========================= */
 .community-layout {
   max-width: 1380px;
   margin: 0 auto;
@@ -88,7 +94,6 @@
 }
 
 .community-side-card,
-.create-post-card,
 .feed-card {
   background: rgba(252, 251, 248, 0.95);
   border: 1px solid rgba(28, 78, 46, 0.08);
@@ -125,14 +130,23 @@
   padding-left: 18px;
 }
 
-.create-post-card {
+/* =========================
+   CREATE POST TRIGGER
+========================= */
+.create-trigger-card {
   padding: 22px;
   margin-bottom: 22px;
   overflow: hidden;
   position: relative;
+  background: rgba(252, 251, 248, 0.95);
+  border: 1px solid rgba(28, 78, 46, 0.08);
+  border-radius: 24px;
+  box-shadow:
+    0 14px 34px rgba(8, 15, 11, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.create-post-card::before {
+.create-trigger-card::before {
   content: "";
   position: absolute;
   inset: 0 0 auto 0;
@@ -140,22 +154,160 @@
   background: linear-gradient(90deg, var(--green-main), #4f8a67, var(--green-soft));
 }
 
-.create-post-head {
-  margin-bottom: 18px;
+.create-trigger-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.create-post-head h2 {
+.create-trigger-copy h2 {
   font-size: 28px;
   color: var(--green-main);
   letter-spacing: -0.7px;
-  margin-bottom: 4px;
+  margin: 0 0 4px;
 }
 
-.create-post-head p {
+.create-trigger-copy p {
+  color: var(--text-sub);
+  font-size: 14px;
+  margin: 0;
+}
+
+.create-plus-btn {
+  width: 76px;
+  height: 76px;
+  border: 2px solid rgba(28, 78, 46, 0.14);
+  border-radius: 18px;
+  background: #fff;
+  color: var(--green-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(8, 15, 11, 0.08);
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+  flex-shrink: 0;
+}
+.create-plus-btn-h {
+   width: 36px;
+  height: 36px;
+  border: 2px solid rgba(28, 78, 46, 0.14);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--green-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(8, 15, 11, 0.08);
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    background 0.22s ease;
+  flex-shrink: 0;
+  font-size: 25px;
+  font-weight: bold;
+}
+.create-plus-btn:hover {
+  transform: translateY(-3px);
+  background: rgba(227, 239, 232, 0.55);
+  box-shadow: 0 18px 34px rgba(8, 15, 11, 0.12);
+}
+.create-plus-btn-h:hover {
+  transform: translateY(-3px);
+  background: rgba(227, 239, 232, 0.55);
+  box-shadow: 0 18px 34px rgba(8, 15, 11, 0.12);
+}
+
+.create-plus-btn span {
+  font-size: 44px;
+  line-height: 1;
+  margin-top: -2px;
+  font-weight: 400;
+}
+
+/* =========================
+   POST POPUP
+========================= */
+.post-popup-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 15, 11, 0.55);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  z-index: 9998;
+}
+
+.post-popup-overlay.show {
+  display: flex;
+}
+
+.post-popup-box {
+  width: min(760px, 100%);
+  max-height: min(90vh, 900px);
+  overflow-y: auto;
+  background: rgba(252, 251, 248, 0.98);
+  border: 1px solid rgba(28, 78, 46, 0.08);
+  border-radius: 28px;
+  padding: 22px;
+  box-shadow: 0 25px 55px rgba(8, 15, 11, 0.18);
+}
+
+.post-popup-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.post-popup-top h3 {
+  margin: 0 0 4px;
+  color: var(--green-main);
+  font-size: 26px;
+  letter-spacing: -0.5px;
+}
+
+.post-popup-top p {
+  margin: 0;
   color: var(--text-sub);
   font-size: 14px;
 }
 
+.post-popup-close-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: none;
+  background: rgba(227, 239, 232, 0.9);
+  color: var(--green-main);
+  font-size: 24px;
+  cursor: pointer;
+  transition:
+    transform 0.22s ease,
+    background 0.22s ease;
+  flex-shrink: 0;
+}
+
+.post-popup-close-btn:hover {
+  transform: rotate(90deg);
+  background: #d9ebdf;
+}
+
+body.popup-open {
+  overflow: hidden;
+}
+
+/* =========================
+   POST FORM
+========================= */
 .post-form input,
 .post-form textarea {
   width: 100%;
@@ -220,6 +372,16 @@
   margin-top: 18px;
 }
 
+.status-text {
+  min-height: 22px;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* =========================
+   BUTTONS
+========================= */
 .btn-primary,
 .btn-soft,
 .editor-toolbar button,
@@ -260,13 +422,9 @@
   background: #d9ebdf;
 }
 
-.status-text {
-  min-height: 22px;
-  margin-top: 12px;
-  font-size: 14px;
-  font-weight: 700;
-}
-
+/* =========================
+   FEED
+========================= */
 .feed-list {
   display: flex;
   flex-direction: column;
@@ -379,15 +537,74 @@
   font-weight: 800;
 }
 
+/* =========================
+   FEED CONTENT TOGGLE
+========================= */
+.feed-text-wrap {
+  margin-bottom: 14px;
+}
+
+.feed-text {
+  color: var(--text-main);
+  line-height: 1.8;
+  font-size: 15px;
+  margin-bottom: 0;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.feed-text.is-collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.feed-more-btn {
+  margin-top: 8px;
+  background: transparent;
+  border: none;
+  color: var(--green-main);
+  font-size: 14px;
+  font-weight: 800;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  gap: 6px;
+}
+
+.feed-more-btn:hover {
+  text-decoration: underline;
+}
+
+.feed-more-btn::after {
+  content: "";
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
 .empty-feed {
   text-align: center;
-  padding: 28px 20px;
+  padding: 32px 20px;
   color: var(--text-sub);
-  background: rgba(252, 251, 248, 0.9);
+  background: rgba(252, 251, 248, 0.92);
   border: 1px dashed rgba(28, 78, 46, 0.14);
   border-radius: 22px;
 }
 
+.empty-feed strong {
+  display: block;
+  color: var(--green-main);
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+
+/* =========================
+   EDITOR MODAL
+========================= */
 .editor-modal {
   position: fixed;
   inset: 0;
@@ -508,6 +725,9 @@
   justify-content: flex-end;
 }
 
+/* =========================
+   COMMUNITY ENTRY
+========================= */
 .community-entry {
   text-align: center;
   margin: 28px 0 12px;
@@ -537,144 +757,8 @@
   box-shadow: 0 22px 40px rgba(28, 78, 46, 0.24);
 }
 
-@media (max-width: 1180px) {
-  .community-layout {
-    grid-template-columns: 1fr minmax(0, 720px);
-  }
-
-  .community-right {
-    display: none;
-  }
-}
-
-@media (max-width: 980px) {
-  .community-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .community-left,
-  .community-right {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .community-topbar-inner,
-  .community-layout {
-    padding-left: 14px;
-    padding-right: 14px;
-  }
-
-  .topbar-brand {
-    font-size: 18px;
-  }
-
-  .topbar-brand::before {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    font-size: 18px;
-  }
-
-  .topbar-actions {
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-
-  .topbar-link {
-    padding: 9px 12px;
-    font-size: 13px;
-  }
-
-  .create-post-head h2 {
-    font-size: 24px;
-  }
-
-  .feed-card-body h4 {
-    font-size: 18px;
-  }
-
-  .feed-reactions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .editor-add-text {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 520px) {
-  .feed-card-head,
-  .feed-card-body,
-  .feed-reactions,
-  .create-post-card {
-    padding-left: 14px;
-    padding-right: 14px;
-  }
-
- .feed-reactions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .reaction-btn,
-  .btn-primary,
-  .btn-soft {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .post-upload-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
 /* =========================
-   FEED CONTENT TOGGLE
-========================= */
-.feed-text-wrap {
-  margin-bottom: 14px;
-}
-
-.feed-text {
-  color: var(--text-main);
-  line-height: 1.8;
-  font-size: 15px;
-  margin-bottom: 0;
-  white-space: normal;
-  word-break: break-word;
-}
-
-.feed-text.is-collapsed {
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.feed-more-btn {
-  margin-top: 8px;
-  background: transparent;
-  border: none;
-  color: var(--green-main);
-  font-size: 14px;
-  font-weight: 800;
-  padding: 0;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  font-family: Arial, Helvetica, sans-serif;
-  gap: 6px;
-}
-
-.feed-more-btn:hover {
-  text-decoration: underline;
-}
-
-.feed-more-btn::after {
-  content: "";
-}
-/* =========================
-   FEED SKELETON LOADING
+   SKELETON LOADING
 ========================= */
 .feed-list.is-loading {
   pointer-events: none;
@@ -769,24 +853,159 @@
   }
 }
 
-/* Empty state refined */
-.empty-feed {
-  text-align: center;
-  padding: 32px 20px;
-  color: var(--text-sub);
-  background: rgba(252, 251, 248, 0.92);
-  border: 1px dashed rgba(28, 78, 46, 0.14);
-  border-radius: 22px;
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 1180px) {
+  .community-layout {
+    grid-template-columns: 1fr minmax(0, 720px);
+  }
+
+  .community-right {
+    display: none;
+  }
 }
 
-.empty-feed strong {
-  display: block;
-  color: var(--green-main);
-  font-size: 17px;
-  margin-bottom: 6px;
+@media (max-width: 980px) {
+  .community-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .community-left,
+  .community-right {
+    display: none;
+  }
 }
 
-/* Reduce motion support */
+@media (max-width: 768px) {
+  .community-topbar-inner,
+  .community-layout {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .topbar-brand {
+    font-size: 11px;
+  }
+
+  .topbar-brand::before {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    font-size: 18px;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+display: flex;
+    justify-content: flex-end;
+  }
+
+  .topbar-link {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+
+  .feed-card-body h4 {
+    font-size: 18px;
+  }
+
+  .feed-reactions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .editor-add-text {
+    flex-direction: column;
+  }
+
+  .create-trigger-copy h2 {
+    font-size: 24px;
+  }
+
+  .create-plus-btn {
+    width: 66px;
+    height: 66px;
+    border-radius: 16px;
+  }
+
+  .create-plus-btn span {
+    font-size: 38px;
+  }
+
+  .post-popup-box {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .post-popup-top h3 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 520px) {
+  .feed-card-head,
+  .feed-card-body,
+  .feed-reactions {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .feed-reactions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .reaction-btn,
+  .btn-primary,
+  .btn-soft {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .post-upload-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .create-trigger-head {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .create-plus-btn {
+    width: 100%;
+    height: 60px;
+    border-radius: 16px;
+  }
+
+  .create-plus-btn span {
+    font-size: 34px;
+  }
+
+  .post-popup-overlay {
+    padding: 12px;
+  }
+
+  .post-popup-box {
+    width: 100%;
+    max-height: 92vh;
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .post-popup-top {
+    gap: 12px;
+  }
+
+  .post-popup-close-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+}
+
+/* =========================
+   REDUCE MOTION
+========================= */
 @media (prefers-reduced-motion: reduce) {
   .skeleton-block {
     animation: none;

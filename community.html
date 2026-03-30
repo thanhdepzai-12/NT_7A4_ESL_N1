@@ -5,15 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Community Feed</title>
   <link rel="stylesheet" href="community.css" />
-   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="community-page">
   <header class="community-topbar">
     <div class="community-topbar-inner">
       <a href="./index.html" class="topbar-brand">♻ Recycle Community</a>
+
       <div class="topbar-actions">
         <a href="./index.html" class="topbar-link">Home</a>
         <a href="./admin.html" class="topbar-link">Admin</a>
+
+        <button
+          type="button"
+          id="openPostPopupBtnTop"
+          class="create-plus-btn-h"
+          aria-label="Open post popup"
+        >
+          <span>+</span>
+        </button>
       </div>
     </div>
   </header>
@@ -36,35 +46,25 @@
     </aside>
 
     <section class="community-center">
-      <div class="create-post-card">
-        <div class="create-post-head">
-          <h2>Create Post</h2>
-          <p>Write like a social feed post</p>
+      <div class="create-trigger-card">
+        <div class="create-trigger-head">
+          <div class="create-trigger-copy">
+            <h2>Share with community</h2>
+            <p>Tap the plus button to create a new post</p>
+          </div>
+
+          <button
+            type="button"
+            id="openPostPopupBtnCenter"
+            class="create-plus-btn"
+            aria-label="Open post popup"
+          >
+            <span>+</span>
+          </button>
         </div>
-
-        <form id="postForm" class="post-form">
-          <input type="text" id="authorName" placeholder="Your name" maxlength="60" required />
-          <input type="text" id="postTitle" placeholder="Post title" maxlength="120" required />
-          <textarea id="postContent" placeholder="What are you thinking?" maxlength="3000" required></textarea>
-
-          <div class="post-upload-row">
-            <input type="file" id="postImageInput" accept="image/*" />
-            <button type="button" id="openEditorBtn" class="btn-soft">Edit image</button>
-          </div>
-
-          <div class="post-preview-wrap">
-            <img id="postPreviewImage" alt="Preview image" style="display:none;" />
-          </div>
-
-          <div class="submit-row">
-            <button type="submit" id="submitPostBtn" class="btn-primary">Post</button>
-          </div>
-
-          <p id="postStatus" class="status-text"></p>
-        </form>
       </div>
 
-     <div class="feed-list" id="approvedPostsList" aria-live="polite" aria-busy="true">
+      <div class="feed-list" id="approvedPostsList" aria-live="polite" aria-busy="true">
         <p class="empty-feed">No approved posts yet.</p>
       </div>
     </section>
@@ -81,6 +81,70 @@
       </div>
     </aside>
   </main>
+
+  <div id="postPopup" class="post-popup-overlay" aria-hidden="true">
+    <div class="post-popup-box">
+      <div class="post-popup-top">
+        <div>
+          <h3>What are you thinking</h3>
+          <p>Share your recycle ideas, green tips and eco products</p>
+        </div>
+
+        <button
+          type="button"
+          id="closePostPopupBtn"
+          class="post-popup-close-btn"
+          aria-label="Close popup"
+        >
+          ×
+        </button>
+      </div>
+
+      <form id="postForm" class="post-form">
+        <input
+          type="text"
+          id="authorName"
+          placeholder="Your name"
+          maxlength="60"
+          required
+        />
+
+        <input
+          type="text"
+          id="postTitle"
+          placeholder="Post title"
+          maxlength="120"
+          required
+        />
+
+        <textarea
+          id="postContent"
+          placeholder="What are you thinking?"
+          maxlength="3000"
+          required
+        ></textarea>
+
+        <div class="post-upload-row">
+          <input type="file" id="postImageInput" accept="image/*" />
+          <button type="button" id="openEditorBtn" class="btn-soft">
+            Edit image
+          </button>
+        </div>
+
+        <div class="post-preview-wrap">
+          <img id="postPreviewImage" alt="Preview image" style="display:none;" />
+        </div>
+
+        <div class="submit-row">
+          <button type="submit" id="submitPostBtn" class="btn-primary">
+            Post
+          </button>
+        </div>
+
+        <p id="postStatus" class="status-text"></p>
+      </form>
+    </div>
+  </div>
 
   <div id="editorModal" class="editor-modal">
     <div class="editor-box">
@@ -108,12 +172,77 @@
       </div>
 
       <div class="editor-actions">
-        <button type="button" id="saveEditedImageBtn" class="btn-primary">Save edited image</button>
+        <button type="button" id="saveEditedImageBtn" class="btn-primary">
+          Save edited image
+        </button>
       </div>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
   <script type="module" src="./community.js"></script>
+
+  <script>
+    const openPostPopupBtns = [
+      document.getElementById("openPostPopupBtnTop"),
+      document.getElementById("openPostPopupBtnCenter")
+    ].filter(Boolean);
+
+    const closePostPopupBtn = document.getElementById("closePostPopupBtn");
+    const postPopup = document.getElementById("postPopup");
+    const postForm = document.getElementById("postForm");
+    const postStatus = document.getElementById("postStatus");
+
+    function openPostPopup() {
+      if (!postPopup) return;
+      postPopup.classList.add("show");
+      postPopup.setAttribute("aria-hidden", "false");
+      document.body.classList.add("popup-open");
+    }
+
+    function closePostPopup() {
+      if (!postPopup) return;
+      postPopup.classList.remove("show");
+      postPopup.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("popup-open");
+    }
+
+    openPostPopupBtns.forEach((btn) => {
+      btn.addEventListener("click", openPostPopup);
+    });
+
+    closePostPopupBtn?.addEventListener("click", closePostPopup);
+
+    postPopup?.addEventListener("click", (e) => {
+      if (e.target === postPopup) {
+        closePostPopup();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && postPopup?.classList.contains("show")) {
+        closePostPopup();
+      }
+    });
+
+    postForm?.addEventListener("submit", () => {
+      setTimeout(() => {
+        const text = (postStatus?.textContent || "").toLowerCase();
+        const isError =
+          postStatus &&
+          (
+            postStatus.style.color === "rgb(217, 48, 37)" ||
+            text.includes("thất bại") ||
+            text.includes("lỗi") ||
+            text.includes("failed") ||
+            text.includes("error")
+          );
+
+        if (!isError) {
+          closePostPopup();
+        }
+      }, 1200);
+    });
+  </script>
 </body>
 </html>
