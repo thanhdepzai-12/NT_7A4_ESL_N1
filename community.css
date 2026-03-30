@@ -673,3 +673,122 @@
 .feed-more-btn::after {
   content: "";
 }
+/* =========================
+   FEED SKELETON LOADING
+========================= */
+.feed-list.is-loading {
+  pointer-events: none;
+}
+
+.feed-skeleton {
+  overflow: hidden;
+  position: relative;
+}
+
+.feed-skeleton .feed-card-head,
+.feed-skeleton .feed-card-body,
+.feed-skeleton .feed-reactions {
+  position: relative;
+  z-index: 1;
+}
+
+.skeleton-block {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    rgba(227, 239, 232, 0.7) 0%,
+    rgba(245, 242, 237, 0.95) 50%,
+    rgba(227, 239, 232, 0.7) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  border-radius: 14px;
+}
+
+.skeleton-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  flex-shrink: 0;
+}
+
+.skeleton-text-group {
+  flex: 1;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+}
+
+.skeleton-line:last-child {
+  margin-bottom: 0;
+}
+
+.skeleton-line.w-90 { width: 90%; }
+.skeleton-line.w-70 { width: 70%; }
+.skeleton-line.w-60 { width: 60%; }
+.skeleton-line.w-50 { width: 50%; }
+.skeleton-line.w-40 { width: 40%; }
+.skeleton-line.w-30 { width: 30%; }
+
+.skeleton-title {
+  height: 22px;
+  width: 72%;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+
+.skeleton-paragraph {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 280px;
+  border-radius: 22px;
+  margin-top: 6px;
+}
+
+.skeleton-reaction {
+  height: 48px;
+  border-radius: 16px;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Empty state refined */
+.empty-feed {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--text-sub);
+  background: rgba(252, 251, 248, 0.92);
+  border: 1px dashed rgba(28, 78, 46, 0.14);
+  border-radius: 22px;
+}
+
+.empty-feed strong {
+  display: block;
+  color: var(--green-main);
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+
+/* Reduce motion support */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block {
+    animation: none;
+  }
+}

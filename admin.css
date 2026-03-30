@@ -435,6 +435,7 @@
 .admin-table-actions .approve-btn,
 .admin-table-actions .reject-btn,
 .admin-table-actions .delete-btn {
+  width: 100%;
   padding: 9px 12px;
   border-radius: 12px;
   font-size: 13px;

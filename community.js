@@ -43,6 +43,7 @@ let selectedFile = null;
 let editedBlob = null;
 let editorCanvas = null;
 let currentImageObject = null;
+let hasLoadedFirstSnapshot = false;
 
 // Mỗi lần reload trang sẽ được bấm reaction lại từ đầu
 window.addEventListener("load", () => {
@@ -424,6 +425,75 @@ function renderPostCard(id, post) {
   `;
 }
 
+/* =========================
+   SKELETON LOADING
+========================= */
+function createSkeletonCard() {
+  return `
+    <article class="feed-card feed-skeleton">
+      <div class="feed-card-head">
+        <div class="skeleton-block skeleton-avatar"></div>
+        <div class="skeleton-text-group">
+          <div class="skeleton-block skeleton-line w-40"></div>
+          <div class="skeleton-block skeleton-line w-30"></div>
+        </div>
+      </div>
+
+      <div class="feed-card-body">
+        <div class="skeleton-block skeleton-title"></div>
+
+        <div class="skeleton-paragraph">
+          <div class="skeleton-block skeleton-line w-90"></div>
+          <div class="skeleton-block skeleton-line w-70"></div>
+          <div class="skeleton-block skeleton-line w-60"></div>
+        </div>
+
+        <div class="skeleton-block skeleton-image"></div>
+      </div>
+
+      <div class="feed-reactions">
+        <div class="skeleton-block skeleton-reaction"></div>
+        <div class="skeleton-block skeleton-reaction"></div>
+        <div class="skeleton-block skeleton-reaction"></div>
+        <div class="skeleton-block skeleton-reaction"></div>
+        <div class="skeleton-block skeleton-reaction"></div>
+        <div class="skeleton-block skeleton-reaction"></div>
+      </div>
+    </article>
+  `;
+}
+
+function renderFeedSkeleton(count = 3) {
+  approvedPostsList.classList.add("is-loading");
+  approvedPostsList.setAttribute("aria-busy", "true");
+  approvedPostsList.innerHTML = Array.from({ length: count }, createSkeletonCard).join("");
+}
+
+function clearFeedLoading() {
+  approvedPostsList.classList.remove("is-loading");
+  approvedPostsList.setAttribute("aria-busy", "false");
+}
+
+function renderEmptyState() {
+  clearFeedLoading();
+  approvedPostsList.innerHTML = `
+    <div class="empty-feed">
+      <strong>Chưa có bài viết nào được duyệt.</strong>
+      <span>Hãy là người đầu tiên chia sẻ ý tưởng tái chế với cộng đồng.</span>
+    </div>
+  `;
+}
+
+function renderErrorState() {
+  clearFeedLoading();
+  approvedPostsList.innerHTML = `
+    <div class="empty-feed">
+      <strong>Không thể tải bài viết.</strong>
+      <span>Vui lòng thử lại sau ít phút.</span>
+    </div>
+  `;
+}
+
 function listenApprovedPosts() {
   const q = query(
     collection(db, "posts"),
@@ -431,12 +501,16 @@ function listenApprovedPosts() {
     orderBy("approvedAt", "desc")
   );
 
+  renderFeedSkeleton(3);
+
   onSnapshot(
     q,
     (snapshot) => {
+      hasLoadedFirstSnapshot = true;
+      clearFeedLoading();
+
       if (snapshot.empty) {
-        approvedPostsList.innerHTML =
-          `<p class="empty-feed">Chưa có bài viết nào được duyệt.</p>`;
+        renderEmptyState();
         return;
       }
 
@@ -449,8 +523,7 @@ function listenApprovedPosts() {
     },
     (error) => {
       console.error(error);
-      approvedPostsList.innerHTML =
-        `<p class="empty-feed">Không thể tải bài viết.</p>`;
+      renderErrorState();
     }
   );
 }
