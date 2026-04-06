@@ -1023,6 +1023,7 @@ video {
 }
 
 @media (max-width: 768px) {
+ 
   .hero {
     padding: 72px 16px 54px;
   }
@@ -1036,7 +1037,7 @@ video {
     max-width: 320px;
     justify-content: center;
     padding: 13px 20px;
-    font-size: 14px;
+    font-size: 11px;
   }
 
   .hero p {
@@ -1047,13 +1048,13 @@ video {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 220px;
+  min-width: 180px;
   text-decoration: none;
-  padding: 14px 24px;
+  padding: 5px 8px;
   border-radius: 14px;
   background: var(--green-main);
   color: #fff;
-  font-size: 15px;
+  font-size: 11px;
   font-weight: 700;
   box-shadow: 0 12px 26px rgba(10, 91, 6, 0.22);
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
