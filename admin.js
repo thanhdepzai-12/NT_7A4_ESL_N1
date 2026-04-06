@@ -18,6 +18,10 @@ import {
   signOut
 } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
+import {
+  addDoc
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
 const ALLOWED_ADMIN_EMAIL = "mrthanh20069@gmail.com";
 const PAGE_SIZE = 5;
 
@@ -598,7 +602,263 @@ onAuthStateChanged(auth, (user) => {
     showDashboard();
     watchPendingPosts();
     watchApprovedPosts();
+    watchPhotoFrames();
   } else {
+    if (typeof photoFramesUnsubscribe === "function") {
+      photoFramesUnsubscribe();
+      photoFramesUnsubscribe = null;
+    }
     showLogin();
   }
 });
+
+/* =========================
+   PHOTO FRAME MANAGER ADDON
+   ========================= */
+
+const CLOUDINARY_FRAME_FOLDER = "photo-frames";
+
+const frameUploadForm = document.getElementById("frameUploadForm");
+const frameTitleInput = document.getElementById("frameTitleInput");
+const frameDescriptionInput = document.getElementById("frameDescriptionInput");
+const frameSortOrderInput = document.getElementById("frameSortOrderInput");
+const framePngInput = document.getElementById("framePngInput");
+const frameUploadStatus = document.getElementById("frameUploadStatus");
+const frameAdminGrid = document.getElementById("frameAdminGrid");
+
+let photoFramesUnsubscribe = null;
+
+function setFrameStatus(message, isError = false) {
+  if (!frameUploadStatus) return;
+  frameUploadStatus.textContent = message;
+  frameUploadStatus.style.color = isError ? "#d93025" : "#1b7f3a";
+}
+
+async function uploadFrameToCloudinaryAdmin(file) {
+  const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  formData.append("folder", CLOUDINARY_FRAME_FOLDER);
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    body: formData
+  });
+
+  if (!response.ok) {
+    throw new Error("Frame upload failed");
+  }
+
+  const data = await response.json();
+
+  return {
+    secureUrl: data.secure_url,
+    publicId: data.public_id,
+    width: data.width,
+    height: data.height
+  };
+}
+
+function sortPhotoFrames(frames = []) {
+  return [...frames].sort((a, b) => {
+    const sortA = Number(a.data.sortOrder ?? 9999);
+    const sortB = Number(b.data.sortOrder ?? 9999);
+
+    if (sortA !== sortB) return sortA - sortB;
+
+    const createdA = a.data.createdAt?.toMillis ? a.data.createdAt.toMillis() : 0;
+    const createdB = b.data.createdAt?.toMillis ? b.data.createdAt.toMillis() : 0;
+
+    return createdB - createdA;
+  });
+}
+
+function renderFrameAdminCard(id, frame) {
+  return `
+    <article class="frame-admin-card">
+      <div class="frame-admin-card__preview">
+        <img src="${escapeHtml(frame.thumbUrl || frame.frameUrl || "")}" alt="${escapeHtml(frame.title || "Frame")}">
+        <span class="frame-admin-card__badge ${frame.isActive !== false ? "is-active" : "is-hidden"}">
+          ${frame.isActive !== false ? "Đang hiện" : "Đang ẩn"}
+        </span>
+      </div>
+
+      <div class="frame-admin-card__body">
+        <div>
+          <h3>${escapeHtml(frame.title || "Untitled frame")}</h3>
+          <p>${escapeHtml(frame.description || "Khung PNG overlay A4.")}</p>
+        </div>
+
+        <div class="frame-admin-card__meta">
+          <span>Sort: ${Number(frame.sortOrder ?? 9999)}</span>
+          <span>${formatDate(frame.createdAt)}</span>
+        </div>
+
+        <div class="frame-admin-card__sort-row">
+          <label>
+            Thứ tự
+            <input type="number" min="0" step="1" value="${Number(frame.sortOrder ?? 9999)}" data-role="sort-input">
+          </label>
+          <button type="button" class="secondary-btn" data-action="save-sort" data-id="${id}">Lưu thứ tự</button>
+        </div>
+
+        <div class="frame-admin-card__actions">
+          <button type="button" class="secondary-btn" data-action="toggle" data-id="${id}">
+            ${frame.isActive !== false ? "Ẩn khung" : "Hiện khung"}
+          </button>
+          <button type="button" class="ghost-btn" data-action="copy" data-id="${id}">Copy URL</button>
+          <button type="button" class="secondary-btn danger" data-action="delete" data-id="${id}">Xóa</button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderPhotoFrames(frames) {
+  if (!frameAdminGrid) return;
+
+  if (!frames.length) {
+    frameAdminGrid.innerHTML = `
+      <div class="empty-feed admin-empty-table">
+        Chưa có khung nào. Upload PNG đầu tiên để trang chọn khung render realtime.
+      </div>
+    `;
+    return;
+  }
+
+  frameAdminGrid.innerHTML = sortPhotoFrames(frames)
+    .map((item) => renderFrameAdminCard(item.id, item.data))
+    .join("");
+}
+
+function watchPhotoFrames() {
+  if (!frameAdminGrid || photoFramesUnsubscribe) return;
+
+  photoFramesUnsubscribe = onSnapshot(
+    collection(db, "photoFrames"),
+    (snapshot) => {
+      const frames = snapshot.docs.map((docSnap) => ({
+        id: docSnap.id,
+        data: docSnap.data()
+      }));
+
+      renderPhotoFrames(frames);
+    },
+    (error) => {
+      console.error(error);
+      setFrameStatus("Không tải được danh sách khung.", true);
+    }
+  );
+}
+
+if (frameUploadForm) {
+  frameUploadForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const file = framePngInput?.files?.[0];
+    const title = frameTitleInput?.value.trim();
+    const description = frameDescriptionInput?.value.trim();
+    const sortOrder = Number(frameSortOrderInput?.value || 9999);
+
+    if (!file) {
+      setFrameStatus("Vui lòng chọn file PNG.", true);
+      return;
+    }
+
+    if (!title) {
+      setFrameStatus("Vui lòng nhập tên khung.", true);
+      return;
+    }
+
+    try {
+      setFrameStatus("Đang upload khung PNG lên Cloudinary...");
+
+      const cloudinaryResult = await uploadFrameToCloudinaryAdmin(file);
+
+      await addDoc(collection(db, "photoFrames"), {
+        title,
+        description: description || "Khung PNG overlay A4.",
+        frameUrl: cloudinaryResult.secureUrl,
+        thumbUrl: cloudinaryResult.secureUrl,
+        publicId: cloudinaryResult.publicId,
+        width: cloudinaryResult.width,
+        height: cloudinaryResult.height,
+        isActive: true,
+        sortOrder: Number.isFinite(sortOrder) ? sortOrder : 9999,
+        source: "cloudinary",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        uploadedBy: auth.currentUser?.email || null
+      });
+
+      frameUploadForm.reset();
+      setFrameStatus("Lưu khung thành công. Trang chọn khung sẽ cập nhật realtime.");
+    } catch (error) {
+      console.error(error);
+      setFrameStatus("Upload khung thất bại.", true);
+    }
+  });
+}
+
+if (frameAdminGrid) {
+  frameAdminGrid.addEventListener("click", async (event) => {
+    const actionButton = event.target.closest("[data-action]");
+    if (!actionButton) return;
+
+    const frameId = actionButton.dataset.id;
+    const action = actionButton.dataset.action;
+
+    if (!frameId) return;
+
+    const card = actionButton.closest(".frame-admin-card");
+
+    try {
+      if (action === "copy") {
+        const imageEl = card?.querySelector("img");
+        const imageUrl = imageEl?.getAttribute("src") || "";
+
+        await navigator.clipboard.writeText(imageUrl);
+        setFrameStatus("Đã copy URL khung PNG.");
+        return;
+      }
+
+      if (action === "save-sort") {
+        const input = card?.querySelector('[data-role="sort-input"]');
+        const nextSortOrder = Number(input?.value || 9999);
+
+        await updateDoc(doc(db, "photoFrames", frameId), {
+          sortOrder: Number.isFinite(nextSortOrder) ? nextSortOrder : 9999,
+          updatedAt: serverTimestamp()
+        });
+
+        setFrameStatus("Đã lưu thứ tự.");
+        return;
+      }
+
+      if (action === "toggle") {
+        const isCurrentlyActive = actionButton.textContent.trim().toLowerCase().includes("ẩn");
+
+        await updateDoc(doc(db, "photoFrames", frameId), {
+          isActive: !isCurrentlyActive,
+          updatedAt: serverTimestamp()
+        });
+
+        setFrameStatus("Đã cập nhật trạng thái hiển thị.");
+        return;
+      }
+
+      if (action === "delete") {
+        const ok = confirm("Bạn có chắc muốn xóa khung này?");
+        if (!ok) return;
+
+        await deleteDoc(doc(db, "photoFrames", frameId));
+        setFrameStatus("Đã xóa khung.");
+      }
+    } catch (error) {
+      console.error(error);
+      setFrameStatus("Không thể xử lý thao tác với khung.", true);
+    }
+  });
+}

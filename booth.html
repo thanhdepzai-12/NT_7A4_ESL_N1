@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Photo Booth A4</title>
+    <link rel="stylesheet" href="assets/css/mainbooth.css" />
+    <link rel="stylesheet" href="assets/css/effice.css" />
+  </head>
+  <body>
+    <div id="loadingScreen" class="loading-screen">
+  <div class="loading-card">
+    <div class="recycle-loader">
+      <div class="recycle-ring"></div>
+      <div class="recycle-core">
+        <div class="recycle-leaf"></div>
+      </div>
+    </div>
+
+    <h2 class="loading-title">Đang chuẩn bị photobooth</h2>
+    <p class="loading-subtitle">
+      Đang tải khung, khởi động camera và căn chỉnh trải nghiệm chụp ảnh.
+    </p>
+
+    <div class="loading-dots">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</div>
+    <main class="page-shell">
+      <header class="hero-panel">
+        <div class="booth-topbar">
+          <button id="backToFramesBtn" class="ghost-btn" type="button">← Đổi khung khác</button>
+          <span class="frame-count">Live newspaper booth</span>
+        </div>
+
+        <div class="booth-head">
+          <span class="hero-panel__eyebrow">Khung đã chọn</span>
+          <h1 id="selectedFrameTitle">Đang tải khung...</h1>
+          <p id="selectedFrameSource">Khởi tạo dữ liệu khung PNG...</p>
+        </div>
+      </header>
+
+      <section class="booth-layout">
+        <article class="camera-card">
+          <div class="camera-stage" id="cameraStage">
+            <div class="camera-stage__paper">
+              <div class="camera-stage__photo-slot">
+                <div class="camera-feed" id="cameraFeed">
+                  <video id="cameraVideo" autoplay muted playsinline></video>
+                </div>
+
+                <div id="permissionPlaceholder" class="permission-placeholder">
+                  <div class="permission-placeholder__icon">📸</div>
+                  <strong>Cấp quyền camera để bắt đầu</strong>
+                  <p>Ảnh sẽ tự canh giữa theo kiểu photobooth, khung PNG nằm đè lên như tờ báo A4.</p>
+                </div>
+              </div>
+
+              <img id="frameOverlay" class="camera-stage__frame" alt="Frame overlay" />
+
+              <div class="camera-stage__final-preview">
+                <img id="finalPreviewImage" alt="Final preview" />
+              </div>
+            </div>
+          </div>
+
+          <div class="camera-status">
+            <div class="status-title">
+              <span class="status-dot"></span>
+              <span id="statusTitle">Đang chuẩn bị camera...</span>
+            </div>
+            <p id="statusBody">
+              Xin cấp quyền camera để khung PNG overlay lên đúng vùng ảnh.
+            </p>
+          </div>
+
+          <div class="desktop-control-actions control-actions">
+            <button id="primaryActionBtn" class="primary-btn" type="button" disabled>Chụp ảnh</button>
+            <button id="retakeBtn" class="secondary-btn" type="button" hidden>Chụp lại</button>
+          </div>
+        </article>
+
+        <aside class="control-card">
+          <div class="control-head">
+            <span class="control-eyebrow">UX photobooth</span>
+            <h2>Auto fit, thao tác tối thiểu</h2>
+            <p>
+              Mình set sẵn layout dùng chung cho tất cả khung: ảnh nằm ở vùng đầu trang, padding hai bên và top đã căn ổn để khớp newspaper overlay.
+            </p>
+          </div>
+
+          <ul class="detail-list">
+            <li>Nút chính: đang live là Chụp ảnh, chụp xong đổi thành Lưu ảnh.</li>
+            <li>Desktop: tải PNG trực tiếp. iPhone / Android: ưu tiên mở native share sheet nếu browser hỗ trợ.</li>
+            <li>Nếu muốn chụp lại thì bấm Chụp lại, camera mở lại ngay.</li>
+          </ul>
+
+          <article class="info-card">
+            <span class="badge">Canvas export</span>
+            <h3>Xuất PNG A4 chất lượng cao</h3>
+            <p>Ảnh cuối được render bằng canvas kích thước lớn rồi mới lưu / share để text và khung nét hơn.</p>
+          </article>
+
+          <article class="notice-card">
+            <span class="badge">iPhone note</span>
+            <h3>Share sheet trước, fallback sau</h3>
+            <p>
+              Nếu Safari hỗ trợ <code>navigator.share(files)</code> thì mở ngay khung chia sẻ để user bấm <strong>Lưu hình ảnh</strong>.
+              Nếu không, script sẽ mở tab preview để vẫn lưu được.
+            </p>
+          </article>
+        </aside>
+      </section>
+    </main>
+
+    <div class="mobile-sticky-actions">
+      <div class="control-actions">
+        <button id="mobilePrimaryActionBtn" class="primary-btn" type="button" disabled>Chụp ảnh</button>
+        <button id="mobileRetakeBtn" class="secondary-btn" type="button" hidden>Chụp lại</button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="assets/js/booth.js"></script>
+  </body>
+</html>

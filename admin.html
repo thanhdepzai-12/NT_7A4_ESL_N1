@@ -6,6 +6,9 @@
   <title>Admin Blog Manager</title>
   <link rel="stylesheet" href="./style.css" />
   <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin-frame-manager.css">
+  <link rel="icon" type="image/png" href="images/7A4.png">
+
 </head>
 <body class="admin-page">
   <header class="community-topbar">
@@ -17,7 +20,52 @@
       </div>
     </div>
   </header>
+ <section class="admin-frame-panel">
+  <div class="admin-frame-panel__head">
+    <span class="admin-frame-eyebrow">Photo booth A4</span>
+    <h2>Quản lý khung PNG</h2>
+    <p>
+      Upload PNG khung lên Cloudinary, lưu metadata vào Firestore collection
+      <code>photoFrames</code>, và trang chọn khung sẽ render realtime.
+    </p>
+  </div>
 
+  <form id="frameUploadForm" class="admin-frame-form">
+    <div class="admin-frame-form__grid">
+      <label>
+        Tên khung
+        <input id="frameTitleInput" type="text" placeholder="Ví dụ: Lunar New Year News" required />
+      </label>
+
+      <label>
+        Thứ tự hiển thị
+        <input id="frameSortOrderInput" type="number" min="0" step="1" value="1" />
+      </label>
+
+      <label>
+        File PNG khung
+        <input id="framePngInput" type="file" accept="image/png" required />
+      </label>
+    </div>
+
+    <label>
+      Mô tả
+      <textarea
+        id="frameDescriptionInput"
+        placeholder="Mô tả ngắn để hiển thị ở trang chọn khung"
+      ></textarea>
+    </label>
+
+    <div class="helper-row">
+      <button class="primary-btn" type="submit">Upload khung lên Cloudinary</button>
+    </div>
+
+    <p id="frameUploadStatus" class="admin-frame-status" aria-live="polite"></p>
+  </form>
+
+  <div id="frameAdminGrid" class="admin-frame-grid"></div>
+
+</section>
   <section class="admin-login-wrap" id="adminLoginWrap">
     <div class="admin-card">
       <h1>Admin Login</h1>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chọn khung ảnh | Photo Booth A4</title>
+    <link rel="stylesheet" href="assets/css/mainbooth.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero-panel">
+        <span class="hero-panel__eyebrow">Tone xanh · photobooth · A4 newspaper</span>
+        <div>
+          <h1>7A4NT NEWS</h1>
+          <p  style="margin-top: 10px;">
+           Stop the presses and clear the front page! A new icon has just been captured, and this headline-making masterpiece is the only news the world needs to see today.
+          </p>
+        </div>
+
+        <div class="hero-actions">
+          <div class="helper-row">
+            <button id="openFirstFrameBtn" class="primary-btn" type="button">Mở khung đầu tiên</button>
+            <button id="refreshHint" class="secondary-btn" type="button">Làm mới danh sách</button>
+          </div>
+          <span id="frameCount" class="frame-count">0 khung</span>
+        </div>
+      </section>
+
+      <section class="frame-section">
+        <div class="section-head">
+          <div>
+            <span class="section-eyebrow">Danh sách khung</span>
+            <h2>Khung báo PNG để người dùng chọn</h2>
+          </div>
+        </div>
+
+        <div id="framesGrid" class="frame-grid" aria-live="polite">
+          
+        </div>
+
+        <div id="framesEmpty" class="empty-state" >
+          <div>
+            <h3>Chưa có khung nào</h3>
+            <p>
+              Upload PNG trong admin trước. Nếu Firebase chưa gắn, trang vẫn sẽ có sẵn khung demo local để test flow.
+            </p>
+          </div>
+        </div>
+        
+      </section>
+
+    </main>
+
+    <script type="module" src="assets/js/mainbooth.js"></script>
+  </body>
+</html>

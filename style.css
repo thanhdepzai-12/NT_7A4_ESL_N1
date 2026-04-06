@@ -911,6 +911,10 @@ video {
   .modal-content h2 {
     font-size: 22px;
   }
+  .modal-content {
+    display: flex;
+    flex-direction: column-reverse;
+  }
   .btn-close {
     width: 100%;
     margin-top: 15px;
